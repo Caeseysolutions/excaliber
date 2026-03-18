@@ -4,886 +4,1722 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EXCALIBUR — Command Centre</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --void: #1a1a2e;
-    --obsidian: #22223a;
-    --steel: #2a2a45;
-    --iron: #32325a;
-    --gold: #f0c060;
-    --gold-dim: #a07830;
-    --gold-glow: rgba(240,192,96,0.15);
-    --silver: #a0a0c0;
-    --white: #eeeadc;
-    --cream: #d0ccbc;
-    --red: #c03030;
-    --red-bright: #f07070;
-    --amber: #f0a040;
-    --green: #30a060;
-    --green-bright: #60e090;
-    --blue: #3070c0;
-    --blue-bright: #70c0f0;
-  }
-
-  * { margin:0; padding:0; box-sizing:border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--void);
-    color: var(--white);
-    font-family: 'Nunito', sans-serif;
-    font-size: 19px;
-    line-height: 1.9;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* NOISE TEXTURE */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
-
-  /* HEADER */
-  header {
-    position: relative;
-    padding: 48px 48px 36px;
-    border-bottom: 1px solid #1e1e2a;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px;
-    z-index: 10;
-  }
-
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 48px; right: 48px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  }
-
-  .brand {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .brand-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 4px;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-  }
-
-  .brand-name {
-    font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 900;
-    letter-spacing: 6px;
-    color: var(--gold);
-    text-shadow: 0 0 40px rgba(201,168,76,0.3);
-    line-height: 1;
-  }
-
-  .brand-sub {
-    font-family: 'Crimson Pro', serif;
-    font-size: 15px;
-    font-style: italic;
-    color: var(--silver);
-    letter-spacing: 1px;
-  }
-
-  .header-meta {
-    text-align: right;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--silver);
-    line-height: 2;
-  }
-
-  .header-meta span {
-    display: block;
-  }
-
-  .live-dot {
-    display: inline-block;
-    width: 6px; height: 6px;
-    background: var(--green-bright);
-    border-radius: 50%;
-    margin-right: 6px;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* MAIN LAYOUT */
-  main {
-    position: relative;
-    z-index: 10;
-    padding: 0 48px 80px;
-  }
-
-  /* SECTION HEADERS */
-  .section-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    padding: 40px 0 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, #1e1e2a, transparent);
-  }
-
-  /* MISSION STATEMENT */
-  .mission {
-    background: var(--steel);
-    border-left: 3px solid var(--gold);
-    padding: 24px 28px;
-    margin-bottom: 2px;
-    font-size: 17px;
-    font-style: italic;
-    color: var(--cream);
-    line-height: 1.8;
-  }
-
-  .mission strong {
-    font-style: normal;
-    color: var(--gold);
-    font-weight: 600;
-  }
-
-  /* PROJECT CARDS */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 2px;
-    margin-top: 0;
-  }
-
-  .project-card {
-    background: var(--obsidian);
-    border: 2px solid #3a3a5c; border-radius: 12px;
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s ease;
-    cursor: default;
-  }
-
-  .project-card:hover {
-    border-color: var(--gold-dim);
-  }
-
-  .project-card:hover .card-glow {
-    opacity: 1;
-  }
-
-  .card-glow {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .card-header {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid #161620;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .card-title-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .card-code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-  }
-
-  .card-title {
-    font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--white);
-    letter-spacing: 1px;
-  }
-
-  .card-domain {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--silver);
-    margin-top: 2px;
-  }
-
-  /* STATUS BADGE */
-  .status-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 2px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .status-live { background: rgba(42,122,74,0.2); color: var(--green-bright); border: 1px solid var(--green); }
-  .status-building { background: rgba(201,120,32,0.15); color: #e09840; border: 1px solid var(--amber); }
-  .status-pending { background: rgba(139,32,32,0.15); color: var(--red-bright); border: 1px solid var(--red); }
-  .status-idea { background: rgba(32,80,160,0.15); color: var(--blue-bright); border: 1px solid var(--blue); }
-
-  .card-body {
-    padding: 20px 24px;
-  }
-
-  .card-description {
-    font-size: 16px;
-    color: var(--silver);
-    line-height: 1.6;
-    margin-bottom: 18px;
-    font-style: italic;
-  }
-
-  /* METRICS ROW */
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    margin-bottom: 18px;
-  }
-
-  .metric {
-    background: var(--steel);
-    padding: 10px 12px;
-    text-align: center;
-  }
-
-  .metric-value {
-    font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--gold);
-    line-height: 1;
-    display: block;
-  }
-
-  .metric-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 8px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--silver);
-    display: block;
-    margin-top: 4px;
-  }
-
-  /* NEXT ACTION */
-  .next-action {
-    background: var(--iron);
-    border-left: 2px solid var(--gold-dim);
-    padding: 12px 16px;
-    margin-bottom: 14px;
-  }
-
-  .next-action-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 8px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 5px;
-  }
-
-  .next-action-text {
-    font-size: 16px;
-    color: var(--cream);
-    line-height: 1.5;
-  }
-
-  /* BLOCKERS */
-  .blockers {
-    margin-bottom: 14px;
-  }
-
-  .blocker-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 8px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--red-bright);
-    margin-bottom: 6px;
-  }
-
-  .blocker-item {
-    font-size: 15px;
-    color: #886060;
-    padding: 3px 0;
-    padding-left: 14px;
-    position: relative;
-  }
-
-  .blocker-item::before {
-    content: '!';
-    position: absolute;
-    left: 0;
-    color: var(--red-bright);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-  }
-
-  /* REVENUE TARGET */
-  .revenue-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-top: 1px solid #161620;
-    margin-top: 6px;
-  }
-
-  .revenue-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--silver);
-  }
-
-  .revenue-amount {
-    font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--green-bright);
-  }
-
-  /* ADMIN SCALE — DAILY FOCUS */
-  .admin-scale {
-    margin-top: 0;
-  }
-
-  .daily-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2px;
-  }
-
-  .day-block {
-    background: var(--obsidian);
-    border: 2px solid #3a3a5c; border-radius: 12px;
-    padding: 18px 20px;
-  }
-
-  .day-name {
-    font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--gold);
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-
-  .day-task {
-    font-size: 15px;
-    color: var(--silver);
-    padding: 4px 0;
-    border-bottom: 1px solid #161620;
-    line-height: 1.4;
-  }
-
-  .day-task:last-child { border-bottom: none; }
-
-  .day-task strong {
-    color: var(--cream);
-    font-weight: 600;
-  }
-
-  /* NORTH STAR */
-  .north-star {
-    background: var(--steel);
-    border: 1px solid var(--gold-dim);
-    padding: 36px 40px;
-    margin-top: 2px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .north-star::before {
-    content: '✦';
-    position: absolute;
-    right: 40px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 80px;
-    color: rgba(201,168,76,0.06);
-    pointer-events: none;
-  }
-
-  .north-star-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 12px;
-  }
-
-  .north-star-text {
-    font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: clamp(16px, 2.5vw, 22px);
-    color: var(--gold);
-    font-weight: 400;
-    line-height: 1.5;
-    max-width: 700px;
-  }
-
-  .north-star-sub {
-    margin-top: 12px;
-    font-size: 16px;
-    font-style: italic;
-    color: var(--silver);
-    max-width: 600px;
-  }
-
-  /* PROMPT BOX */
-  .prompt-box {
-    background: var(--void);
-    border: 1px solid #1e1e2a;
-    border-left: 3px solid var(--blue-bright);
-    padding: 24px 28px;
-    margin-top: 2px;
-  }
-
-  .prompt-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: var(--blue-bright);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-
-  .prompt-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    color: var(--cream);
-    line-height: 1.9;
-    white-space: pre-wrap;
-  }
-
-  /* FOOTER */
-  footer {
-    position: relative;
-    z-index: 10;
-    padding: 28px 48px;
-    border-top: 1px solid #1a1a24;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-  }
-
-  footer::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 48px; right: 48px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  }
-
-  .footer-left {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: #333340;
-    letter-spacing: 2px;
-  }
-
-  .footer-right {
-    font-family: 'Crimson Pro', serif;
-    font-size: 14px;
-    font-style: italic;
-    color: #333340;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 700px) {
-    header, main, footer { padding-left: 20px; padding-right: 20px; }
-    header { flex-direction: column; align-items: flex-start; }
-    .header-meta { text-align: left; }
-    .projects-grid { grid-template-columns: 1fr; }
-    .metrics { grid-template-columns: repeat(3,1fr); }
-    .daily-grid { grid-template-columns: 1fr 1fr; }
-    .north-star { padding: 24px; }
-  }
-
-  /* LOAD ANIMATION */
-  .fade-in {
-    animation: fadeIn 0.6s ease forwards;
-    opacity: 0;
-  }
-
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-
-  .fade-in:nth-child(1) { animation-delay: 0.1s; }
-  .fade-in:nth-child(2) { animation-delay: 0.2s; }
-  .fade-in:nth-child(3) { animation-delay: 0.3s; }
-  .fade-in:nth-child(4) { animation-delay: 0.4s; }
-  .fade-in:nth-child(5) { animation-delay: 0.5s; }
+:root {
+  --void: #03060a;
+  --deep: #060d14;
+  --panel: #081018;
+  --card: #0a1520;
+  --border: #0f2a40;
+  --border-bright: #1a5070;
+  --cyan: #00ccff;
+  --cyan-dim: #004466;
+  --gold: #ffbb00;
+  --gold-dim: #553d00;
+  --green: #00ff88;
+  --green-dim: #003322;
+  --red: #ff4455;
+  --amber: #ff9900;
+  --white: #ffffff;
+  --light: #d0e8ff;
+  --mid: #7090a8;
+  --radius: 0px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--void);
+  color: var(--white);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SCANLINES */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,180,255,0.015) 3px, rgba(0,180,255,0.015) 4px);
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* GRID BG */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: linear-gradient(rgba(0,80,120,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,80,120,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ===== PASSWORD SCREEN ===== */
+#lock-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--void);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.lock-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 900;
+  color: var(--cyan);
+  letter-spacing: 8px;
+  text-shadow: 0 0 30px var(--cyan), 0 0 60px rgba(0,204,255,0.3);
+  animation: flicker 4s infinite;
+}
+
+@keyframes flicker {
+  0%,95%,100% { opacity:1; }
+  96% { opacity:0.8; }
+  97% { opacity:1; }
+  98% { opacity:0.6; }
+}
+
+.lock-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: var(--mid);
+  text-transform: uppercase;
+}
+
+.lock-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 320px;
+}
+
+.lock-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+.lock-input {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border-bright);
+  border-top: 2px solid var(--cyan);
+  color: var(--cyan);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 20px;
+  padding: 14px 20px;
+  letter-spacing: 6px;
+  outline: none;
+  text-align: center;
+}
+
+.lock-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0,204,255,0.2);
+}
+
+.lock-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  padding: 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.lock-btn:hover {
+  background: var(--cyan);
+  color: var(--void);
+  box-shadow: 0 0 30px rgba(0,204,255,0.4);
+}
+
+.lock-error {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--red);
+  letter-spacing: 2px;
+  display: none;
+}
+
+/* ===== MAIN APP ===== */
+#app { display: none; position: relative; z-index: 10; }
+
+/* HEADER */
+header {
+  background: var(--deep);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 48px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  position: relative;
+}
+
+header::after {
+  content:'';
+  position:absolute;
+  bottom:-2px; left:0; right:0;
+  height:2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), var(--cyan), transparent);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--cyan-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.brand-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(24px, 3.5vw, 44px);
+  font-weight: 900;
+  color: var(--cyan);
+  letter-spacing: 6px;
+  text-shadow: 0 0 20px rgba(0,204,255,0.5);
+  line-height: 1;
+}
+
+.brand-mission {
+  font-size: 12px;
+  color: var(--mid);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* CENTER NAV */
+.center-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--mid);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover, .nav-btn.active {
+  background: var(--panel);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+/* HEADER RIGHT */
+.header-right {
+  text-align: right;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--mid);
+  line-height: 2;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  margin-right: 6px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+/* ===== PAGES ===== */
+.page { display: none; padding: 40px 48px 80px; }
+.page.active { display: block; }
+
+/* SECTION TITLE */
+.sec-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.sec-title::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: linear-gradient(90deg, var(--border-bright), transparent);
+}
+
+/* NORTH STAR */
+.north-star {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  padding: 32px 40px;
+  margin-bottom: 4px;
+}
+
+.ns-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.ns-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(14px, 1.8vw, 20px);
+  color: var(--white);
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+.ns-sub {
+  margin-top: 12px;
+  font-size: 16px;
+  color: var(--light);
+  font-style: italic;
+}
+
+/* CHAIN */
+.chain {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 36px;
+  margin-bottom: 4px;
+  font-size: 17px;
+  line-height: 2.2;
+  color: var(--light);
+}
+
+.chain strong { color: var(--gold); font-weight: 700; }
+.chain .arrow { color: var(--cyan); margin: 0 8px; }
+
+/* PROJECT GRID */
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.proj-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.proj-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:-100%;
+  width:100%; height:100%;
+  background: linear-gradient(90deg, transparent, rgba(0,204,255,0.04), transparent);
+  transition: left 0.5s;
+}
+
+.proj-card:hover::before { left:100%; }
+.proj-card:hover { border-color: var(--cyan-dim); border-top-color: var(--cyan); }
+
+.proj-header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.proj-code {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--cyan-dim);
+  margin-bottom: 6px;
+}
+
+.proj-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 1px;
+}
+
+.proj-domain {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--mid);
+  margin-top: 4px;
+}
+
+.status {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.s-live    { background:rgba(0,255,136,0.1);  color:var(--green); border:1px solid var(--green); }
+.s-build   { background:rgba(255,153,0,0.1);   color:var(--amber); border:1px solid var(--amber); }
+.s-wait    { background:rgba(255,68,85,0.1);   color:var(--red);   border:1px solid var(--red); }
+.s-idea    { background:rgba(0,204,255,0.1);   color:var(--cyan);  border:1px solid var(--cyan-dim); }
+
+.proj-body { padding: 20px 28px 24px; }
+
+.proj-desc {
+  font-size: 16px;
+  color: var(--light);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 2px;
+  margin-bottom: 20px;
+}
+
+.metric {
+  background: var(--panel);
+  padding: 12px;
+  text-align: center;
+}
+
+.metric-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+}
+
+.metric-lbl {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mid);
+  display: block;
+  margin-top: 5px;
+}
+
+.next-act {
+  background: var(--panel);
+  border-left: 3px solid var(--gold);
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+
+.next-lbl {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.next-txt {
+  font-size: 16px;
+  color: var(--white);
+  line-height: 1.6;
+}
+
+.blocker-lbl {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.blocker {
+  font-size: 15px;
+  color: #d08080;
+  padding: 3px 0 3px 18px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.blocker::before { content:'!'; position:absolute; left:0; color:var(--red); font-family:'Share Tech Mono',monospace; font-weight:700; }
+
+.rev-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
+}
+
+.rev-lbl { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--mid); }
+.rev-val { font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700; color:var(--green); }
+
+.open-btn {
+  width: 100%;
+  margin-top: 14px;
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: var(--cyan);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.open-btn:hover {
+  background: var(--cyan);
+  color: var(--void);
+  border-color: var(--cyan);
+}
+
+/* ===== PROJECT DETAIL PAGE ===== */
+#proj-detail { display:none; padding: 40px 48px 80px; }
+#proj-detail.active { display:block; }
+
+.back-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-bottom: 32px;
+  display: inline-block;
+  transition: all 0.2s;
+}
+
+.back-btn:hover { background: var(--panel); }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin-bottom: 3px;
+}
+
+.detail-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+}
+
+.detail-panel h3 {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.edit-field {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-bottom: 2px solid var(--cyan-dim);
+  color: var(--white);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 16px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.edit-field:focus {
+  border-bottom-color: var(--cyan);
+  box-shadow: 0 2px 12px rgba(0,204,255,0.15);
+}
+
+.edit-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.save-btn {
+  background: transparent;
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.save-btn:hover {
+  background: var(--green);
+  color: var(--void);
+}
+
+.save-status {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--green);
+  margin-left: 12px;
+  display: none;
+}
+
+/* CLAUDE LINK */
+.claude-link {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--cyan);
+  padding: 24px 32px;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.claude-link-text {
+  font-size: 16px;
+  color: var(--light);
+}
+
+.claude-link-text strong { color: var(--cyan); }
+
+.claude-open-btn {
+  background: transparent;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.claude-open-btn:hover {
+  background: var(--cyan);
+  color: var(--void);
+}
+
+/* ===== INCOME PAGE ===== */
+.income-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.income-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 24px 28px;
+  text-align: center;
+}
+
+.income-box-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--green);
+  display: block;
+  text-shadow: 0 0 20px rgba(0,255,136,0.3);
+}
+
+.income-box-lbl {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mid);
+  display: block;
+  margin-top: 6px;
+}
+
+.income-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+  margin-bottom: 4px;
+}
+
+.income-form h3 {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 8px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.income-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+}
+
+.income-table h3 {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mid);
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  font-size: 15px;
+  color: var(--light);
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+td.amount { color: var(--green); font-family: 'Orbitron', sans-serif; font-weight: 700; }
+td.project { color: var(--cyan); font-family: 'Share Tech Mono', monospace; font-size: 12px; }
+
+/* ===== ASSETS PAGE ===== */
+.assets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3px;
+}
+
+.asset-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 24px 28px;
+}
+
+.asset-block h3 {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.asset-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.asset-item:last-child { border-bottom: none; }
+
+.asset-name {
+  font-size: 15px;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.asset-url {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.asset-url:hover { color: var(--white); }
+
+/* ===== PROMPTS PAGE ===== */
+.prompts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3px;
+}
+
+.prompt-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--cyan-dim);
+  padding: 24px 28px;
+}
+
+.prompt-block:hover { border-left-color: var(--cyan); }
+
+.prompt-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.prompt-use {
+  font-size: 13px;
+  color: var(--mid);
+  font-style: italic;
+  margin-bottom: 14px;
+}
+
+.prompt-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--light);
+  line-height: 1.9;
+  background: var(--panel);
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  white-space: pre-wrap;
+  margin-bottom: 12px;
+}
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: var(--mid);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+/* WEEKLY GRID */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 3px;
+}
+
+.day-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+}
+
+.day-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.day-task {
+  font-size: 15px;
+  color: var(--light);
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.5;
+}
+
+.day-task:last-child { border-bottom: none; }
+.day-task strong { color: var(--white); font-weight: 700; }
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 10;
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+footer::before {
+  content:'';
+  position:absolute;
+  top:-2px; left:0; right:0;
+  height:2px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.foot-left {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: #304050;
+  letter-spacing: 2px;
+}
+
+.foot-right {
+  font-size: 14px;
+  font-style: italic;
+  color: #304050;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  header, .page, #proj-detail, footer { padding-left: 20px; padding-right: 20px; }
+  header { grid-template-columns: 1fr; gap: 16px; }
+  .center-nav { flex-wrap: wrap; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr 1fr; }
+}
 </style>
 </head>
 <body>
 
+<!-- ===== LOCK SCREEN ===== -->
+<div id="lock-screen">
+  <div class="lock-logo">EXCALIBUR</div>
+  <div class="lock-sub">CaeseySolutions LLC · Private Command Centre</div>
+  <div class="lock-form">
+    <div class="lock-label">Access Code Required</div>
+    <input type="password" class="lock-input" id="pwd-input" placeholder="••••••••" maxlength="20">
+    <button class="lock-btn" onclick="checkPassword()">AUTHENTICATE</button>
+    <div class="lock-error" id="lock-error">⚠ ACCESS DENIED — INCORRECT CODE</div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="app">
+
 <header>
   <div class="brand">
-    <div class="brand-eyebrow">CaeseySolutions LLC — Private</div>
+    <div class="brand-tag">CaeseySolutions LLC · Private</div>
     <div class="brand-name">EXCALIBUR</div>
-    <div class="brand-sub">Command Centre · Mission Control · Admin Scale</div>
+    <div class="brand-mission">Humanitarian Endowment Foundation · Infinity Bank</div>
   </div>
-  <div class="header-meta">
-    <span><span class="live-dot"></span>SYSTEM ACTIVE</span>
-    <span id="live-date">—</span>
+  <div class="center-nav">
+    <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-btn" onclick="showPage('income')">Income</button>
+    <button class="nav-btn" onclick="showPage('assets')">Assets</button>
+    <button class="nav-btn" onclick="showPage('prompts')">Prompts</button>
+    <button class="nav-btn" onclick="showPage('weekly')">This Week</button>
+  </div>
+  <div class="header-right">
+    <span><span class="live-dot"></span>SYSTEM ACTIVE</span><br>
+    <span id="live-date">—</span><br>
     <span id="live-time">—</span>
-    <span>v2.0 — Eye-Friendly</span>
   </div>
 </header>
 
-<main>
+<!-- ===== DASHBOARD PAGE ===== -->
+<div class="page active" id="page-dashboard">
 
-  <!-- NORTH STAR -->
-  <div class="section-title">North Star</div>
-  <div class="north-star fade-in">
-    <div class="north-star-label">Ultimate Objective — Excalibur Infinity</div>
-    <div class="north-star-text">By helping others solve their problems, money flows to the mission. Every project is a solution for someone. Every solution funds the next. The sword sharpens itself.</div>
-    <div class="north-star-sub">Foundation first. Each step tested, audited, and sound before the next is built. No holes. No shortcuts. Build for 100 years.</div>
+  <div class="sec-title" style="padding-top:40px;">North Star</div>
+  <div class="north-star">
+    <div class="ns-label">✦ Excalibur Infinity — The Purpose</div>
+    <div class="ns-text">Build a self-funding humanitarian endowment bank that finances pro-survival campaigns — education, criminal reform, drug rehabilitation, human rights — permanently and untouchably. A legacy for generations. Not for one man. For the planet.</div>
+    <div class="ns-sub">Foundation first. Survive today. Build the legacy tomorrow. The sword sharpens itself.</div>
   </div>
 
-  <!-- CLAUDE PROMPT -->
-  <div class="section-title">Daily Claude Brief</div>
-  <div class="prompt-box fade-in">
-    <div class="prompt-label">⚡ Copy this at the start of every Claude session</div>
-    <div class="prompt-text">I am Kristof Cordier. CaeseySolutions LLC (Wyoming).
-My command centre is Excalibur. Here is today's focus:
+  <div class="sec-title">The Chain</div>
+  <div class="chain">
+    <strong>Today</strong><span class="arrow">→</span>Maison Cordier + AirlessFix + DriveAlert generate survival cash<br>
+    <strong>Near Term</strong><span class="arrow">→</span>Czech English Engine feeds LITE / Applied Scholastics (Education Campaign)<br>
+    <strong>Phase 2</strong><span class="arrow">→</span>Sangambi Gold Mine supplies precious metals to the bank<br>
+    <strong>Phase 3</strong><span class="arrow">→</span>Excalibur Infinity Bank — 10:1 leverage — endowment fund grows<br>
+    <strong>Forever</strong><span class="arrow">→</span>Humanitarian campaigns funded — planet gets better — legacy secured
+  </div>
+
+  <div class="sec-title">Active Operations</div>
+  <div class="proj-grid">
+
+    <div class="proj-card" onclick="openProject('maison')">
+      <div class="proj-header">
+        <div>
+          <div class="proj-code">OP-01 · ARTS & CULTURE</div>
+          <div class="proj-title">Maison Cordier</div>
+          <div class="proj-domain">maisoncordier.art</div>
+        </div>
+        <div class="status s-live">Live</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">European art curation. Scottish painter Kirsteen live. French artist incoming. Instagram launched. 15% commission model.</div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-val">2</span><span class="metric-lbl">Artists</span></div>
+          <div class="metric"><span class="metric-val">€595</span><span class="metric-lbl">Per Painting</span></div>
+          <div class="metric"><span class="metric-val">15%</span><span class="metric-lbl">Your Cut</span></div>
+        </div>
+        <div class="next-act">
+          <div class="next-lbl">▶ Next Action</div>
+          <div class="next-txt">Write 7 Instagram posts. Get French artist name + images. Post daily.</div>
+        </div>
+        <div class="blocker-lbl">! Blockers</div>
+        <div class="blocker">French artist details not captured</div>
+        <div class="blocker">No Instagram content plan</div>
+        <div class="blocker">Zero sales — first sale is the milestone</div>
+        <div class="rev-row">
+          <span class="rev-lbl">Week 1 Target</span>
+          <span class="rev-val">1 Painting = €89</span>
+        </div>
+        <button class="open-btn">OPEN PROJECT ▶</button>
+      </div>
+    </div>
+
+    <div class="proj-card" onclick="openProject('drivealert')">
+      <div class="proj-header">
+        <div>
+          <div class="proj-code">OP-02 · AFFILIATE</div>
+          <div class="proj-title">DriveAlert</div>
+          <div class="proj-domain">drivealert.eu · drivealert.be</div>
+        </div>
+        <div class="status s-build">Partial</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">OOONO CO-DRIVER affiliate. Amazon.de live. BE and FR visitors hit German pages — conversion killer.</div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-val">2</span><span class="metric-lbl">Sites Live</span></div>
+          <div class="metric"><span class="metric-val">DE ✓</span><span class="metric-lbl">Market</span></div>
+          <div class="metric"><span class="metric-val">NL FR ✗</span><span class="metric-lbl">Missing</span></div>
+        </div>
+        <div class="next-act">
+          <div class="next-lbl">▶ Next Action</div>
+          <div class="next-txt">Apply Amazon.nl Associates. Apply Amazon.fr Associates. Both free.</div>
+        </div>
+        <div class="blocker-lbl">! Blockers</div>
+        <div class="blocker">Amazon.nl Associates not set up</div>
+        <div class="blocker">Amazon.fr Associates not set up</div>
+        <div class="blocker">OOONO direct outreach — no response</div>
+        <div class="rev-row">
+          <span class="rev-lbl">Model</span>
+          <span class="rev-val">Affiliate Commission</span>
+        </div>
+        <button class="open-btn">OPEN PROJECT ▶</button>
+      </div>
+    </div>
+
+    <div class="proj-card" onclick="openProject('airlessfix')">
+      <div class="proj-header">
+        <div>
+          <div class="proj-code">OP-03 · TECH SUPPORT</div>
+          <div class="proj-title">AirlessFix</div>
+          <div class="proj-domain">airlessfix.eu</div>
+        </div>
+        <div class="status s-build">Built · Not Live</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">AI tech support for Graco Magnum sprayers. Marc persona. 5 languages. One afternoon from going live.</div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-val">5</span><span class="metric-lbl">Languages</span></div>
+          <div class="metric"><span class="metric-val">€3</span><span class="metric-lbl">Ko-fi Ask</span></div>
+          <div class="metric"><span class="metric-val">A20–A100</span><span class="metric-lbl">Models</span></div>
+        </div>
+        <div class="next-act">
+          <div class="next-lbl">▶ Next Action</div>
+          <div class="next-txt">Deploy Ko-fi. Activate email gate. Set Porkbun forwarding. Push live.</div>
+        </div>
+        <div class="blocker-lbl">! Blockers</div>
+        <div class="blocker">Ko-fi not deployed</div>
+        <div class="blocker">Email gate not activated</div>
+        <div class="blocker">Google Sheets logging not connected</div>
+        <div class="rev-row">
+          <span class="rev-lbl">Model</span>
+          <span class="rev-val">Donations + Manuals</span>
+        </div>
+        <button class="open-btn">OPEN PROJECT ▶</button>
+      </div>
+    </div>
+
+    <div class="proj-card" onclick="openProject('lite')">
+      <div class="proj-header">
+        <div>
+          <div class="proj-code">OP-04 · EDUCATION CAMPAIGN</div>
+          <div class="proj-title">Czech English Engine</div>
+          <div class="proj-domain">LITE.cz — Independent Lead Asset</div>
+        </div>
+        <div class="status s-idea">Concept</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Independent lead-gen for English learners in Czech cities. Feeds LITE — Applied Scholastics. Protects the education humanitarian campaign.</div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-val">13</span><span class="metric-lbl">LITE Locations</span></div>
+          <div class="metric"><span class="metric-val">0</span><span class="metric-lbl">Competitors</span></div>
+          <div class="metric"><span class="metric-val">€0</span><span class="metric-lbl">Budget Now</span></div>
+        </div>
+        <div class="next-act">
+          <div class="next-lbl">▶ Next Action</div>
+          <div class="next-txt">Fund first via Maison Cordier or AirlessFix. Then build landing page.</div>
+        </div>
+        <div class="blocker-lbl">! Blockers</div>
+        <div class="blocker">No budget yet</div>
+        <div class="blocker">Zuzanna not formally approached</div>
+        <div class="rev-row">
+          <span class="rev-lbl">Model</span>
+          <span class="rev-val">Referral Fee</span>
+        </div>
+        <button class="open-btn">OPEN PROJECT ▶</button>
+      </div>
+    </div>
+
+    <div class="proj-card" onclick="openProject('sangambi')">
+      <div class="proj-header">
+        <div>
+          <div class="proj-code">OP-05 · PHASE 2 · PRECIOUS METALS</div>
+          <div class="proj-title">Sangambi Gold JV</div>
+          <div class="proj-domain">Africa Ground Ops · AMLM Capital</div>
+        </div>
+        <div class="status s-wait">Waiting</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Gold mine JV. Kristof + Jon = Africa ground ops. Ryan + Frank (AMLM) = capital + NASDAQ. Phase 2 of the Excalibur bank gold supply chain.</div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-val">NI 43-101</span><span class="metric-lbl">Verified</span></div>
+          <div class="metric"><span class="metric-val">S-1</span><span class="metric-lbl">AMLM Filing</span></div>
+          <div class="metric"><span class="metric-val">Phase 2</span><span class="metric-lbl">Bank Plan</span></div>
+        </div>
+        <div class="next-act">
+          <div class="next-lbl">▶ Next Action</div>
+          <div class="next-txt">Hold. Ryan reposted on LinkedIn — green signal. Wait for proposal. Do not chase.</div>
+        </div>
+        <div class="blocker-lbl">! Blockers</div>
+        <div class="blocker">Investor proposal not received</div>
+        <div class="blocker">Namibia copper details pending</div>
+        <div class="rev-row">
+          <span class="rev-lbl">Role</span>
+          <span class="rev-val">Feeds The Bank</span>
+        </div>
+        <button class="open-btn">OPEN PROJECT ▶</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== PROJECT DETAIL ===== -->
+<div id="proj-detail">
+  <button class="back-btn" onclick="closeProject()">← BACK TO DASHBOARD</button>
+
+  <div class="claude-link">
+    <div class="claude-link-text">
+      <strong>Open Claude session for this project</strong> — paste the brief and start working immediately
+    </div>
+    <a href="https://claude.ai" target="_blank" class="claude-open-btn">OPEN CLAUDE ▶</a>
+  </div>
+
+  <div class="detail-grid">
+    <div class="detail-panel">
+      <h3>Project Status</h3>
+      <label class="edit-label">Current Status</label>
+      <select class="edit-field" id="d-status">
+        <option>Live</option>
+        <option>Building</option>
+        <option>Waiting</option>
+        <option>Concept</option>
+        <option>Paused</option>
+        <option>Complete</option>
+      </select>
+      <label class="edit-label">Next Action</label>
+      <textarea class="edit-field" id="d-next" rows="3"></textarea>
+      <label class="edit-label">Blockers</label>
+      <textarea class="edit-field" id="d-blockers" rows="3"></textarea>
+      <button class="save-btn" onclick="saveProject()">SAVE CHANGES</button>
+      <span class="save-status" id="save-status">✓ SAVED</span>
+    </div>
+
+    <div class="detail-panel">
+      <h3>Notes & Decisions</h3>
+      <label class="edit-label">Notes</label>
+      <textarea class="edit-field" id="d-notes" rows="8" placeholder="Add notes, decisions, ideas..."></textarea>
+      <button class="save-btn" onclick="saveProject()">SAVE NOTES</button>
+    </div>
+  </div>
+
+  <div class="detail-panel" style="margin-top:3px;">
+    <h3>Claude Brief — Copy This For This Project</h3>
+    <div class="prompt-text" id="d-brief">Loading...</div>
+    <button class="copy-btn" onclick="copyBrief()">COPY BRIEF</button>
+  </div>
+</div>
+
+<!-- ===== INCOME PAGE ===== -->
+<div class="page" id="page-income">
+  <div class="sec-title" style="padding-top:40px;">Income Tracker</div>
+
+  <div class="income-summary">
+    <div class="income-box">
+      <span class="income-box-val" id="total-income">€0</span>
+      <span class="income-box-lbl">Total Income</span>
+    </div>
+    <div class="income-box">
+      <span class="income-box-val" id="this-month">€0</span>
+      <span class="income-box-lbl">This Month</span>
+    </div>
+    <div class="income-box">
+      <span class="income-box-val" id="target-gap">€200</span>
+      <span class="income-box-lbl">Target Gap</span>
+    </div>
+    <div class="income-box">
+      <span class="income-box-val" id="entry-count">0</span>
+      <span class="income-box-lbl">Transactions</span>
+    </div>
+  </div>
+
+  <div class="income-form">
+    <h3>Log New Income</h3>
+    <div class="form-row">
+      <div>
+        <label class="edit-label">Project</label>
+        <select class="edit-field" id="inc-project">
+          <option>Maison Cordier</option>
+          <option>DriveAlert</option>
+          <option>AirlessFix</option>
+          <option>Czech English</option>
+          <option>Sangambi</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="edit-label">Amount (€)</label>
+        <input type="number" class="edit-field" id="inc-amount" placeholder="0.00">
+      </div>
+      <div>
+        <label class="edit-label">Description</label>
+        <input type="text" class="edit-field" id="inc-desc" placeholder="e.g. Painting sale - Kirsteen">
+      </div>
+      <div>
+        <button class="save-btn" style="margin-top:22px;" onclick="logIncome()">LOG IT</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="income-table">
+    <h3>Income Log</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Project</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody id="income-tbody">
+        <tr><td colspan="4" style="color:var(--mid); text-align:center; padding:24px;">No income logged yet. First euro incoming.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== ASSETS PAGE ===== -->
+<div class="page" id="page-assets">
+  <div class="sec-title" style="padding-top:40px;">Asset Registry</div>
+  <div class="assets-grid">
+
+    <div class="asset-block">
+      <h3>Live Websites</h3>
+      <div class="asset-item">
+        <span class="asset-name">Maison Cordier</span>
+        <a class="asset-url" href="https://maisoncordier.art" target="_blank">maisoncordier.art ↗</a>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">DriveAlert EU</span>
+        <a class="asset-url" href="https://drivealert.eu" target="_blank">drivealert.eu ↗</a>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">DriveAlert BE</span>
+        <a class="asset-url" href="https://drivealert.be" target="_blank">drivealert.be ↗</a>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">AirlessFix</span>
+        <a class="asset-url" href="https://airlessfix.eu" target="_blank">airlessfix.eu ↗</a>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">CaeseySolutions</span>
+        <a class="asset-url" href="https://caeseysolutions.com" target="_blank">caeseysolutions.com ↗</a>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">Excalibur Dashboard</span>
+        <a class="asset-url" href="https://caeseysolutions.github.io/excaliber" target="_blank">github.io/excaliber ↗</a>
+      </div>
+    </div>
+
+    <div class="asset-block">
+      <h3>GitHub Repositories</h3>
+      <div class="asset-item">
+        <span class="asset-name">Excaliber</span>
+        <a class="asset-url" href="https://github.com/Caeseysolutions/excaliber" target="_blank">Caeseysolutions/excaliber ↗</a>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">DriveAlert</span>
+        <a class="asset-url" href="https://github.com/Caeseysolutions" target="_blank">Caeseysolutions/drivealert ↗</a>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">AirlessFix</span>
+        <a class="asset-url" href="https://github.com/Caeseysolutions" target="_blank">Caeseysolutions/airlessfix ↗</a>
+      </div>
+    </div>
+
+    <div class="asset-block">
+      <h3>Key Contacts</h3>
+      <div class="asset-item">
+        <span class="asset-name">OOONO CEO</span>
+        <span class="asset-url">Christian Walther Øyrabø</span>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">OOONO Support</span>
+        <span class="asset-url">support@ooono.com</span>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">Kirsteen (Artist)</span>
+        <span class="asset-url">kirsteenann@gmail.com</span>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">AirlessFix Email</span>
+        <span class="asset-url">airlessfix@gmail.com</span>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">Zuzanna (LITE)</span>
+        <span class="asset-url">Prague · 20yr friend · lite.cz</span>
+      </div>
+      <div class="asset-item">
+        <span class="asset-name">Ryan + Frank (AMLM)</span>
+        <span class="asset-url">Sangambi investors · NASDAQ</span>
+      </div>
+    </div>
+
+    <div class="asset-block">
+      <h3>Google Sheet — Excalibur Data</h3>
+      <div class="asset-item">
+        <span class="asset-name">Excaliber Sheet</span>
+        <a class="asset-url" href="https://docs.google.com/spreadsheets/d/18c7BtOa_qqzi0VfNDuYTbkY3UlXPrCUvlgk-che9GIA/edit" target="_blank">Open Sheet ↗</a>
+      </div>
+      <div style="margin-top:16px; font-size:14px; color:var(--mid); font-style:italic; line-height:1.7;">
+        This sheet is your data backup. All income, notes and project updates are stored here. If anything breaks — this sheet rebuilds everything.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== PROMPTS PAGE ===== -->
+<div class="page" id="page-prompts">
+  <div class="sec-title" style="padding-top:40px;">Claude Prompt Library</div>
+  <div class="prompts-grid">
+
+    <div class="prompt-block">
+      <div class="prompt-title">Daily Session Brief</div>
+      <div class="prompt-use">Use this at the start of EVERY Claude conversation</div>
+      <div class="prompt-text" id="daily-brief">Excalibur session. I am Kristof Cordier. CaeseySolutions LLC (Wyoming).
+
+MISSION: Build Excalibur Infinity Bank to fund humanitarian campaigns permanently.
 
 ACTIVE PROJECTS:
-1. Maison Cordier (maisoncordier.art) — Art curation, Kirsteen (Scottish) + French artist TBC. Instagram started. Need: 30-day content plan, French artist onboarding, first sale.
-2. DriveAlert (drivealert.eu / .be) — OOONO affiliate. Amazon.de live. Blocking: Amazon.nl + .fr accounts not set up. OOONO direct outreach pending.
-3. AirlessFix (airlessfix.eu) — Graco AI support site. Marc persona built. Blocking: Ko-fi + email gate not deployed yet.
-4. LITE Czech — Independent lead-gen asset for English learners in Czech cities. Idea stage. No approvals needed. Own the pipe.
-5. Sangambi Gold JV — Ryan + Frank (AMLM) pursuing investors. Proposal expected. Kristof + Jon (Nuedge) = Africa ground ops. Waiting.
+1. Maison Cordier (maisoncordier.art) — Art curation. Kirsteen Scottish + French artist. Instagram live. Target: first sale.
+2. DriveAlert (drivealert.eu / .be) — OOONO affiliate. Amazon.de live. Need: .nl and .fr accounts.
+3. AirlessFix (airlessfix.eu) — Graco AI support. Marc built. Need: Ko-fi + email gate deployed.
+4. Czech English Engine — Lead-gen for LITE schools. Concept stage. Feeds education campaign.
+5. Sangambi Gold JV — Phase 2 of bank. Ryan + Frank (AMLM) pursuing investors. Waiting.
 
-MY RULES:
-- One step at a time. Test before next step.
-- Zero unnecessary cost. Free tools first.
-- Short, punchy answers. No waffle.
-- I am the connector. I listen first, solve second.
+MY RULES: One step at a time. Test before next. Zero unnecessary cost. Short punchy answers.
 
 TODAY I want to work on: [FILL THIS IN]</div>
-  </div>
-
-  <!-- PROJECTS -->
-  <div class="section-title">Active Operations</div>
-  <div class="projects-grid">
-
-    <!-- MAISON CORDIER -->
-    <div class="project-card fade-in">
-      <div class="card-glow"></div>
-      <div class="card-header">
-        <div class="card-title-group">
-          <div class="card-code">OP-01</div>
-          <div class="card-title">Maison Cordier</div>
-          <div class="card-domain">maisoncordier.art</div>
-        </div>
-        <div class="status-badge status-live">Live</div>
-      </div>
-      <div class="card-body">
-        <div class="card-description">European art curation. Scottish painter Kirsteen live. French artist incoming. Instagram launched yesterday. Mixed editorial + affiliate commission model.</div>
-        <div class="metrics">
-          <div class="metric">
-            <span class="metric-value">2</span>
-            <span class="metric-label">Artists</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">€595</span>
-            <span class="metric-label">Per Painting</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">15%</span>
-            <span class="metric-label">Commission</span>
-          </div>
-        </div>
-        <div class="next-action">
-          <div class="next-action-label">▶ Next Action</div>
-          <div class="next-action-text">Onboard French artist — name, bio, images. Build 30-day Instagram content plan. Push 5 people in network directly about Kirsteen's work this week.</div>
-        </div>
-        <div class="blockers">
-          <div class="blocker-label">! Blockers</div>
-          <div class="blocker-item">French artist details not yet captured</div>
-          <div class="blocker-item">No Instagram content plan in place</div>
-          <div class="blocker-item">Zero sales so far — first sale is the milestone</div>
-        </div>
-        <div class="revenue-row">
-          <span class="revenue-label">Target — Week 1</span>
-          <span class="revenue-amount">1 Painting Sold</span>
-        </div>
-      </div>
+      <button class="copy-btn" onclick="copyPrompt('daily-brief', this)">COPY PROMPT</button>
     </div>
 
-    <!-- DRIVEALERT -->
-    <div class="project-card fade-in">
-      <div class="card-glow"></div>
-      <div class="card-header">
-        <div class="card-title-group">
-          <div class="card-code">OP-02</div>
-          <div class="card-title">DriveAlert</div>
-          <div class="card-domain">drivealert.eu · drivealert.be</div>
-        </div>
-        <div class="status-badge status-building">Partial</div>
-      </div>
-      <div class="card-body">
-        <div class="card-description">OOONO CO-DRIVER affiliate sites. Amazon.de links live with tag drivealert-21. Belgian and French visitors hit German-language pages — conversion killer.</div>
-        <div class="metrics">
-          <div class="metric">
-            <span class="metric-value">2</span>
-            <span class="metric-label">Sites Live</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">DE</span>
-            <span class="metric-label">Only Market</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">0</span>
-            <span class="metric-label">NL · FR Live</span>
-          </div>
-        </div>
-        <div class="next-action">
-          <div class="next-action-label">▶ Next Action</div>
-          <div class="next-action-text">Set up Amazon.nl Associates account. Set up Amazon.fr Associates account. Then route BE/NL visitors to .nl and FR visitors to .fr links.</div>
-        </div>
-        <div class="blockers">
-          <div class="blocker-label">! Blockers</div>
-          <div class="blocker-item">Amazon.nl Associates — not set up</div>
-          <div class="blocker-item">Amazon.fr Associates — not set up</div>
-          <div class="blocker-item">OOONO direct outreach (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fb888e8b8b94898fbb9494949594d5989496">[email&#160;protected]</a>) — pending response</div>
-        </div>
-        <div class="revenue-row">
-          <span class="revenue-label">Income Model</span>
-          <span class="revenue-amount">Affiliate Commission</span>
-        </div>
-      </div>
+    <div class="prompt-block">
+      <div class="prompt-title">Maison Cordier — Instagram Session</div>
+      <div class="prompt-use">Use when working on Maison Cordier Instagram content</div>
+      <div class="prompt-text" id="mc-prompt">Excalibur session — Maison Cordier focus.
+
+Maison Cordier (maisoncordier.art) is my European art curation platform.
+Artists: Kirsteen Lyons-Benson (Scottish, seascapes/landscapes, €595/painting) + French artist TBC.
+Commission: 15% on sales I generate.
+Instagram: @maisoncordier — started March 2026.
+Target buyers: Europeans with disposable income, interior designers, collectors.
+
+The brand story: Scotland meets France. Two artists. One house. Curated for Europe.
+
+TODAY I need: [FILL THIS IN — e.g. 7 Instagram posts / hashtag strategy / caption for painting X]</div>
+      <button class="copy-btn" onclick="copyPrompt('mc-prompt', this)">COPY PROMPT</button>
     </div>
 
-    <!-- AIRLESSFIX -->
-    <div class="project-card fade-in">
-      <div class="card-glow"></div>
-      <div class="card-header">
-        <div class="card-title-group">
-          <div class="card-code">OP-03</div>
-          <div class="card-title">AirlessFix</div>
-          <div class="card-domain">airlessfix.eu</div>
-        </div>
-        <div class="status-badge status-building">Built · Not Live</div>
-      </div>
-      <div class="card-body">
-        <div class="card-description">Multilingual AI tech support for Graco Magnum airless sprayers. AI persona Marc. EN/NL/FR/DE/ES. Code complete. Ko-fi donations + manual as thank-you gift.</div>
-        <div class="metrics">
-          <div class="metric">
-            <span class="metric-value">5</span>
-            <span class="metric-label">Languages</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">€3</span>
-            <span class="metric-label">Ko-fi Ask</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">A20–A100</span>
-            <span class="metric-label">Models</span>
-          </div>
-        </div>
-        <div class="next-action">
-          <div class="next-action-label">▶ Next Action</div>
-          <div class="next-action-text">Deploy Ko-fi button. Activate email gate. Set Porkbun email forwarding for <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2d5e585d5d425f596d4c445f41485e5e4b4455034858">[email&#160;protected]</a>. Push live. This is one afternoon of work.</div>
-        </div>
-        <div class="blockers">
-          <div class="blocker-label">! Blockers</div>
-          <div class="blocker-item">Ko-fi not deployed — pending</div>
-          <div class="blocker-item">Email gate not activated</div>
-          <div class="blocker-item">Google Sheets conversation logging — not connected</div>
-        </div>
-        <div class="revenue-row">
-          <span class="revenue-label">Model</span>
-          <span class="revenue-amount">Donations + Manuals</span>
-        </div>
-      </div>
+    <div class="prompt-block">
+      <div class="prompt-title">AirlessFix — Technical Session</div>
+      <div class="prompt-use">Use when working on AirlessFix deployment or Marc</div>
+      <div class="prompt-text" id="af-prompt">Excalibur session — AirlessFix focus.
+
+AirlessFix (airlessfix.eu) is my multilingual AI tech support site for Graco Magnum airless sprayers.
+AI persona: Marc. Languages: EN/NL/FR/DE/ES.
+Models covered: A20, A30, A45, A60, A100.
+Revenue: Ko-fi donations (€3 ask) + manual downloads (€4.99-€9.99).
+Email: airlessfix@gmail.com / support@airlessfix.eu (Porkbun forwarding).
+Referral code: AFX10.
+Status: Code complete. Ko-fi and email gate NOT yet deployed.
+
+TODAY I need: [FILL THIS IN]</div>
+      <button class="copy-btn" onclick="copyPrompt('af-prompt', this)">COPY PROMPT</button>
     </div>
 
-    <!-- LITE CZECH -->
-    <div class="project-card fade-in">
-      <div class="card-glow"></div>
-      <div class="card-header">
-        <div class="card-title-group">
-          <div class="card-code">OP-04</div>
-          <div class="card-title">Czech English Engine</div>
-          <div class="card-domain">LITE.cz — Independent Lead Asset</div>
-        </div>
-        <div class="status-badge status-idea">Concept</div>
-      </div>
-      <div class="card-body">
-        <div class="card-description">Independent lead-gen funnel for English learners in Czech cities. Own the pipe. No approvals needed from LITE. Offer warm leads once proven. Zuzanna is a 20-year friend — let the results do the talking.</div>
-        <div class="metrics">
-          <div class="metric">
-            <span class="metric-value">13</span>
-            <span class="metric-label">LITE Locations</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">0</span>
-            <span class="metric-label">Competitors</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">€0</span>
-            <span class="metric-label">Budget Now</span>
-          </div>
-        </div>
-        <div class="next-action">
-          <div class="next-action-label">▶ Next Action</div>
-          <div class="next-action-text">Fund first. Once €200 in hand from Maison Cordier or AirlessFix, build Czech lead-gen landing page on GitHub Pages. Capture emails. Refer to LITE.</div>
-        </div>
-        <div class="blockers">
-          <div class="blocker-label">! Blockers</div>
-          <div class="blocker-item">Zero budget — must fund via other ops first</div>
-          <div class="blocker-item">No domain purchased yet</div>
-          <div class="blocker-item">Waiting for Zuzanna to open the door</div>
-        </div>
-        <div class="revenue-row">
-          <span class="revenue-label">Model</span>
-          <span class="revenue-amount">Referral Fee / Consulting</span>
-        </div>
-      </div>
+    <div class="prompt-block">
+      <div class="prompt-title">DriveAlert — Affiliate Session</div>
+      <div class="prompt-use">Use when working on DriveAlert sites or Amazon affiliate</div>
+      <div class="prompt-text" id="da-prompt">Excalibur session — DriveAlert focus.
+
+DriveAlert (drivealert.eu + drivealert.be) are OOONO CO-DRIVER affiliate sites.
+Products: OOONO CO-DRIVER NO2 + P-DISC NO3.
+Amazon affiliate tag: drivealert-21 (Amazon.de only — live).
+Problem: Belgian and French visitors hit German Amazon pages — bad UX, low conversion.
+Needed: Amazon.nl Associates account + Amazon.fr Associates account.
+OOONO direct outreach: support@ooono.com — CEO Christian Walther Øyrabø.
+
+TODAY I need: [FILL THIS IN]</div>
+      <button class="copy-btn" onclick="copyPrompt('da-prompt', this)">COPY PROMPT</button>
     </div>
 
-    <!-- SANGAMBI -->
-    <div class="project-card fade-in">
-      <div class="card-glow"></div>
-      <div class="card-header">
-        <div class="card-title-group">
-          <div class="card-code">OP-05</div>
-          <div class="card-title">Sangambi Gold JV</div>
-          <div class="card-domain">Africa Ground Ops · AMLM Capital Vehicle</div>
-        </div>
-        <div class="status-badge status-pending">Waiting</div>
-      </div>
-      <div class="card-body">
-        <div class="card-description">Gold mine joint venture. Kristof + Jon (Nuedge LLC) = Africa ground ops and deal sourcing. Ryan + Frank (AMLM) = capital and NASDAQ vehicle. Copper opportunity in Namibia also on table.</div>
-        <div class="metrics">
-          <div class="metric">
-            <span class="metric-value">NI 43-101</span>
-            <span class="metric-label">Report</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">S-1</span>
-            <span class="metric-label">AMLM Filing</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">2</span>
-            <span class="metric-label">Opportunities</span>
-          </div>
-        </div>
-        <div class="next-action">
-          <div class="next-action-label">▶ Next Action</div>
-          <div class="next-action-text">Hold. Ryan publicly reposted Sangambi on LinkedIn — positive signal. Proposal from Ryan + Frank expected. Do not chase. Wait for the document then review.</div>
-        </div>
-        <div class="blockers">
-          <div class="blocker-label">! Blockers</div>
-          <div class="blocker-item">Investor proposal not yet received</div>
-          <div class="blocker-item">Namibia copper opportunity — details pending</div>
-        </div>
-        <div class="revenue-row">
-          <span class="revenue-label">Potential</span>
-          <span class="revenue-amount">High · Long Term</span>
-        </div>
-      </div>
+    <div class="prompt-block">
+      <div class="prompt-title">Sangambi — JV Session</div>
+      <div class="prompt-use">Use when working on Sangambi gold mine JV</div>
+      <div class="prompt-text" id="sg-prompt">Excalibur session — Sangambi Gold JV focus.
+
+Sangambi gold mine joint venture.
+My role: Kristof Cordier + Jon (Nuedge LLC) = Africa ground ops and deal sourcing.
+Partners: Ryan + Frank (AMLM) = capital and NASDAQ vehicle (pursuing S-1 filing).
+Mine owner: Jeremiah.
+Technical verification: NI 43-101 report complete.
+Additional opportunity: Copper in Namibia.
+Strategic framing: This is Phase 2 of Excalibur Infinity Bank — gold supply chain.
+Status: Ryan publicly reposted Sangambi on LinkedIn. Investor proposal expected. Do not chase.
+
+TODAY I need: [FILL THIS IN]</div>
+      <button class="copy-btn" onclick="copyPrompt('sg-prompt', this)">COPY PROMPT</button>
     </div>
 
   </div>
+</div>
 
-  <!-- ADMIN SCALE — WEEKLY FOCUS -->
-  <div class="section-title">Admin Scale — This Week</div>
-  <div class="admin-scale">
-    <div class="daily-grid">
-      <div class="day-block fade-in">
-        <div class="day-name">Monday</div>
-        <div class="day-task"><strong>AirlessFix</strong> — Ko-fi deploy. Email gate on. Push live.</div>
-        <div class="day-task"><strong>Maison Cordier</strong> — Get French artist name + 3 images.</div>
-      </div>
-      <div class="day-block fade-in">
-        <div class="day-name">Tuesday</div>
-        <div class="day-task"><strong>DriveAlert</strong> — Open Amazon.nl Associates account.</div>
-        <div class="day-task"><strong>Maison Cordier</strong> — Post 1 on Instagram. Story behind Kirsteen.</div>
-      </div>
-      <div class="day-block fade-in">
-        <div class="day-name">Wednesday</div>
-        <div class="day-task"><strong>DriveAlert</strong> — Open Amazon.fr Associates account.</div>
-        <div class="day-task"><strong>Maison Cordier</strong> — Direct message 5 people in network about site.</div>
-      </div>
-      <div class="day-block fade-in">
-        <div class="day-name">Thursday</div>
-        <div class="day-task"><strong>AirlessFix</strong> — Audit live site. Test Marc. Check email gate.</div>
-        <div class="day-task"><strong>Maison Cordier</strong> — Post 2. Introduce the French artist teaser.</div>
-      </div>
-      <div class="day-block fade-in">
-        <div class="day-name">Friday</div>
-        <div class="day-task"><strong>Review</strong> — What moved? What's blocked? What needs help?</div>
-        <div class="day-task"><strong>Sangambi</strong> — Any news from Ryan / Frank?</div>
-      </div>
-      <div class="day-block fade-in">
-        <div class="day-name">Weekend</div>
-        <div class="day-task"><strong>Graco Article 10</strong> — You're already doing this. Note any patterns for AirlessFix knowledge base.</div>
-        <div class="day-task"><strong>Rest</strong> — You're building an army. Soldiers need sleep.</div>
-      </div>
+<!-- ===== WEEKLY PAGE ===== -->
+<div class="page" id="page-weekly">
+  <div class="sec-title" style="padding-top:40px;">Admin Scale — This Week</div>
+  <div class="week-grid">
+    <div class="day-block">
+      <div class="day-name">Monday</div>
+      <div class="day-task"><strong>AirlessFix</strong> — Ko-fi live. Email gate on. Push.</div>
+      <div class="day-task"><strong>Maison Cordier</strong> — Get French artist details.</div>
+    </div>
+    <div class="day-block">
+      <div class="day-name">Tuesday</div>
+      <div class="day-task"><strong>DriveAlert</strong> — Apply Amazon.nl Associates.</div>
+      <div class="day-task"><strong>Maison Cordier</strong> — Post 1 Instagram. Kirsteen story.</div>
+    </div>
+    <div class="day-block">
+      <div class="day-name">Wednesday</div>
+      <div class="day-task"><strong>DriveAlert</strong> — Apply Amazon.fr Associates.</div>
+      <div class="day-task"><strong>Maison Cordier</strong> — Post 2 Instagram.</div>
+    </div>
+    <div class="day-block">
+      <div class="day-name">Thursday</div>
+      <div class="day-task"><strong>AirlessFix</strong> — Audit live site. Test Marc.</div>
+      <div class="day-task"><strong>Maison Cordier</strong> — Post 3. French artist teaser.</div>
+    </div>
+    <div class="day-block">
+      <div class="day-name">Friday</div>
+      <div class="day-task"><strong>Review</strong> — What moved? What blocked?</div>
+      <div class="day-task"><strong>Sangambi</strong> — Any news from Ryan / Frank?</div>
+    </div>
+    <div class="day-block">
+      <div class="day-name">Weekend</div>
+      <div class="day-task"><strong>Article 10</strong> — Already doing this. Note patterns for AirlessFix.</div>
+      <div class="day-task"><strong>Rest</strong> — Armies need sleep.</div>
     </div>
   </div>
-
-</main>
+</div>
 
 <footer>
-  <div class="footer-left">EXCALIBUR v1.0 · CAESEYSOLUTIONS LLC · PRIVATE</div>
-  <div class="footer-right">By helping others, the money flows. The sword sharpens itself.</div>
+  <div class="foot-left">EXCALIBUR v4.0 · CAESEYSOLUTIONS LLC · PRIVATE · ZERO COST</div>
+  <div class="foot-right">By helping others, money flows. The sword sharpens itself.</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // Live clock
-  function updateTime() {
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('en-GB', { weekday:'short', day:'numeric',
+</div><!-- end #app -->
+
+<script>
+// ===== PASSWORD =====
+const PASSWORD = 'excaliber2026';
+
+function checkPassword() {
+  const input = document.getElementById('pwd-input').value;
+  if (input === PASSWORD) {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadIncome();
+  } else {
+    document.getElementById('lock-error').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+document.getElementById('pwd-input').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') checkPassword();
+});
+
+// ===== CLOCK =====
+function updateTime() {
+  const now = new Date();
+  document.getElementById('live-date').textContent = now.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
+  document.getElementById('live-time').textContent = now.toLocaleTimeString('en-GB');
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+// ===== NAVIGATION =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('proj-detail').classList.remove('active');
+  document.getElementById('proj-detail').style.display = 'none';
+  const page = document.getElementById('page-' + name);
+  if (page) {
+    page.classList.add('active');
+    page.style.display = 'block';
+  }
+  event.target.classList.add('active');
+}
+
+// ===== PROJECTS =====
+const projectData = {
+  maison: {
+    name: 'Maison Cordier',
+    status: 'Live',
+    next: 'Write 7 Instagram posts with hashtags. Get French artist name + 3 images. Post daily.',
+    blockers: 'French artist details not captured\nNo Instagram content plan\nZero sales — first sale is the milestone',
+    notes: '',
+    briefKey: 'mc-prompt'
+  },
+  drivealert: {
+    name: 'DriveAlert',
+    status: 'Building',
+    next: 'Apply for Amazon.nl Associates account. Apply for Amazon.fr Associates account.',
+    blockers: 'Amazon.nl Associates not set up\nAmazon.fr Associates not set up\nOOONO direct outreach — no response',
+    notes: '',
+    briefKey: 'da-prompt'
+  },
+  airlessfix: {
+    name: 'AirlessFix',
+    status: 'Building',
+    next: 'Deploy Ko-fi button. Activate email gate. Set Porkbun forwarding. Push live.',
+    blockers: 'Ko-fi not deployed\nEmail gate not activated\nGoogle Sheets logging not connected',
+    notes: '',
+    briefKey: 'af-prompt'
+  },
+  lite: {
+    name: 'Czech English Engine',
+    status: 'Concept',
+    next: 'Fund first via Maison Cordier or AirlessFix. Then build landing page on GitHub Pages.',
+    blockers: 'No budget yet\nZuzanna not formally approached',
+    notes: '',
+    briefKey: 'daily-brief'
+  },
+  sangambi: {
+    name: 'Sangambi Gold JV',
+    status: 'Waiting',
+    next: 'Hold. Wait for investor proposal from Ryan + Frank. Do not chase.',
+    blockers: 'Investor proposal not received\nNamibia copper details pending',
+    notes: '',
+    briefKey: 'sg-prompt'
+  }
+};
+
+let currentProject = null;
+
+function openProject(id) {
+  currentProject = id;
+  const data = JSON.parse(localStorage.getItem('proj_' + id)) || projectData[id];
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const detail = document.getElementById('proj-detail');
+  detail.style.display = 'block';
+  detail.classList.add('active');
+  document.getElementById('d-status').value = data.status || projectData[id].status;
+  document.getElementById('d-next').value = data.next || projectData[id].next;
+  document.getElementById('d-blockers').value = data.blockers || projectData[id].blockers;
+  document.getElementById('d-notes').value = data.notes || '';
+  const briefText = document.getElementById(projectData[id].briefKey);
+  document.getElementById('d-brief').textContent = briefText ? briefText.textContent : 'Open the Prompts page to find the brief for this project.';
+  window.scrollTo(0, 0);
+}
+
+function closeProject() {
+  document.getElementById('proj-detail').classList.remove('active');
+  document.getElementById('proj-detail').style.display = 'none';
+  document.getElementById('page-dashboard').classList.add('active');
+}
+
+function saveProject() {
+  if (!currentProject) return;
+  const data = {
+    status: document.getElementById('d-status').value,
+    next: document.getElementById('d-next').value,
+    blockers: document.getElementById('d-blockers').value,
+    notes: document.getElementById('d-notes').value
+  };
+  localStorage.setItem('proj_' + currentProject, JSON.stringify(data));
+  const ss = document.getElementById('save-status');
+  ss.style.display = 'inline';
+  setTimeout(() => { ss.style.display = 'none'; }, 2000);
+}
+
+// ===== INCOME =====
+function loadIncome() {
+  const entries = JSON.parse(localStorage.getItem('income_entries')) || [];
+  renderIncome(entries);
+}
+
+function logIncome() {
+  const project = document.getElementById('inc-project').value;
+  const amount = parseFloat(document.getElementById('inc-amount').value);
+  const desc = document.getElementById('inc-desc').value;
+  if (!amount || amount <= 0) { alert('Enter a valid amount'); return; }
+  const entries = JSON.parse(localStorage.getItem('income_entries')) || [];
+  entries.unshift({
+    date: new Date().toLocaleDateString('en-GB'),
+    project, amount, desc
+  });
+  localStorage.setItem('income_entries', JSON.stringify(entries));
+  document.getElementById('inc-amount').value = '';
+  document.getElementById('inc-desc').value = '';
+  renderIncome(entries);
+}
+
+function renderIncome(entries) {
+  const tbody = document.getElementById('income-tbody');
+  if (entries.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--mid); text-align:center; padding:24px;">No income logged yet. First euro incoming.</td></tr>';
+    return;
+  }
+  const total = entries.reduce((s, e) => s + e.amount, 0);
+  const now = new Date();
+  const thisMonth = entries.filter(e => {
+    const parts = e.date.split('/');
+    return parseInt(parts[1]) === now.getMonth() + 1 && parseInt(parts[2]) === now.getFullYear();
+  }).reduce((s, e) => s + e.amount, 0);
+  document.getElementById('total-income').textContent = '€' + total.toFixed(2);
+  document.getElementById('this-month').textContent = '€' + thisMonth.toFixed(2);
+  document.getElementById('target-gap').textContent = '€' + Math.max(0, 200 - total).toFixed(2);
+  document.getElementById('entry-count').textContent = entries.length;
+  tbody.innerHTML = entries.map(e => `
+    <tr>
+      <td>${e.date}</td>
+      <td class="project">${e.project}</td>
+      <td>${e.desc}</td>
+      <td class="amount">€${e.amount.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+// ===== COPY PROMPTS =====
+function copyPrompt(id, btn) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ COPIED';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'COPY PROMPT'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyBrief() {
+  const text = document.getElementById('d-brief').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Brief copied — paste it into Claude');
+  });
+}
+</script>
+
+</body>
+</html>
