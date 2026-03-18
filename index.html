@@ -3,8 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EXCALIBUR — Command Centre</title>
+<title>EXCALIBUR v6 — Command Centre</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NX1B2429ZH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NX1B2429ZH');
+</script>
 <style>
 :root {
   --void: #03060a;
@@ -18,18 +26,14 @@
   --gold: #ffbb00;
   --gold-dim: #553d00;
   --green: #00ff88;
-  --green-dim: #003322;
   --red: #ff4455;
   --amber: #ff9900;
   --white: #ffffff;
   --light: #d0e8ff;
   --mid: #7090a8;
-  --radius: 0px;
 }
-
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-
 body {
   background: var(--void);
   color: var(--white);
@@ -40,8 +44,6 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-
-/* SCANLINES */
 body::after {
   content:'';
   position:fixed;
@@ -50,8 +52,6 @@ body::after {
   pointer-events:none;
   z-index:9999;
 }
-
-/* GRID BG */
 body::before {
   content:'';
   position:fixed;
@@ -62,922 +62,283 @@ body::before {
   z-index:0;
 }
 
-/* ===== PASSWORD SCREEN ===== */
+/* LOCK */
 #lock-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--void);
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
+  position:fixed; inset:0; background:var(--void);
+  z-index:10000; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:32px;
 }
-
 .lock-logo {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(36px, 6vw, 64px);
-  font-weight: 900;
-  color: var(--cyan);
-  letter-spacing: 8px;
-  text-shadow: 0 0 30px var(--cyan), 0 0 60px rgba(0,204,255,0.3);
-  animation: flicker 4s infinite;
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(36px,6vw,64px); font-weight:900;
+  color:var(--cyan); letter-spacing:8px;
+  text-shadow:0 0 30px var(--cyan),0 0 60px rgba(0,204,255,0.3);
+  animation:flicker 4s infinite;
 }
-
-@keyframes flicker {
-  0%,95%,100% { opacity:1; }
-  96% { opacity:0.8; }
-  97% { opacity:1; }
-  98% { opacity:0.6; }
-}
-
-.lock-sub {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 13px;
-  letter-spacing: 4px;
-  color: var(--mid);
-  text-transform: uppercase;
-}
-
-.lock-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 320px;
-}
-
-.lock-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 4px;
-  color: var(--gold);
-  text-transform: uppercase;
-  align-self: flex-start;
-}
-
+@keyframes flicker { 0%,95%,100%{opacity:1;} 96%{opacity:0.8;} 97%{opacity:1;} 98%{opacity:0.6;} }
+.lock-sub { font-family:'Share Tech Mono',monospace; font-size:13px; letter-spacing:4px; color:var(--mid); text-transform:uppercase; }
+.lock-form { display:flex; flex-direction:column; align-items:center; gap:16px; width:320px; }
+.lock-label { font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:4px; color:var(--gold); text-transform:uppercase; align-self:flex-start; }
 .lock-input {
-  width: 100%;
-  background: var(--panel);
-  border: 1px solid var(--border-bright);
-  border-top: 2px solid var(--cyan);
-  color: var(--cyan);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 20px;
-  padding: 14px 20px;
-  letter-spacing: 6px;
-  outline: none;
-  text-align: center;
+  width:100%; background:var(--panel); border:1px solid var(--border-bright);
+  border-top:2px solid var(--cyan); color:var(--cyan);
+  font-family:'Share Tech Mono',monospace; font-size:20px;
+  padding:14px 20px; letter-spacing:6px; outline:none; text-align:center;
 }
-
-.lock-input:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 20px rgba(0,204,255,0.2);
-}
-
+.lock-input:focus { border-color:var(--cyan); box-shadow:0 0 20px rgba(0,204,255,0.2); }
 .lock-btn {
-  width: 100%;
-  background: transparent;
-  border: 1px solid var(--cyan);
-  color: var(--cyan);
-  font-family: 'Orbitron', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  padding: 14px;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all 0.2s;
+  width:100%; background:transparent; border:1px solid var(--cyan); color:var(--cyan);
+  font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700;
+  letter-spacing:4px; padding:14px; cursor:pointer; text-transform:uppercase; transition:all 0.2s;
 }
+.lock-btn:hover { background:var(--cyan); color:var(--void); box-shadow:0 0 30px rgba(0,204,255,0.4); }
+.lock-error { font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--red); letter-spacing:2px; display:none; }
 
-.lock-btn:hover {
-  background: var(--cyan);
-  color: var(--void);
-  box-shadow: 0 0 30px rgba(0,204,255,0.4);
-}
-
-.lock-error {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px;
-  color: var(--red);
-  letter-spacing: 2px;
-  display: none;
-}
-
-/* ===== MAIN APP ===== */
-#app { display: none; position: relative; z-index: 10; }
+/* APP */
+#app { display:none; position:relative; z-index:10; }
 
 /* HEADER */
 header {
-  background: var(--deep);
-  border-bottom: 1px solid var(--border);
-  padding: 20px 48px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  position: relative;
+  background:var(--deep); border-bottom:1px solid var(--border);
+  padding:16px 40px; display:grid;
+  grid-template-columns:1fr auto 1fr; align-items:center; position:relative;
 }
-
 header::after {
-  content:'';
-  position:absolute;
-  bottom:-2px; left:0; right:0;
-  height:2px;
-  background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), var(--cyan), transparent);
+  content:''; position:absolute; bottom:-2px; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--gold),var(--cyan),transparent);
 }
-
-.brand {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-tag {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: var(--cyan-dim);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.brand-name {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(24px, 3.5vw, 44px);
-  font-weight: 900;
-  color: var(--cyan);
-  letter-spacing: 6px;
-  text-shadow: 0 0 20px rgba(0,204,255,0.5);
-  line-height: 1;
-}
-
-.brand-mission {
-  font-size: 12px;
-  color: var(--mid);
-  margin-top: 4px;
-  font-style: italic;
-}
-
-/* CENTER NAV */
-.center-nav {
-  display: flex;
-  gap: 4px;
-}
-
+.brand-tag { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:4px; color:var(--cyan-dim); text-transform:uppercase; margin-bottom:4px; }
+.brand-name { font-family:'Orbitron',sans-serif; font-size:clamp(20px,3vw,40px); font-weight:900; color:var(--cyan); letter-spacing:6px; text-shadow:0 0 20px rgba(0,204,255,0.5); line-height:1; }
+.brand-mission { font-size:11px; color:var(--mid); margin-top:4px; font-style:italic; }
+.center-nav { display:flex; gap:3px; flex-wrap:wrap; justify-content:center; }
 .nav-btn {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 16px;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--mid);
-  cursor: pointer;
-  transition: all 0.2s;
+  font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px;
+  text-transform:uppercase; padding:8px 14px; background:transparent;
+  border:1px solid var(--border); color:var(--mid); cursor:pointer; transition:all 0.2s;
 }
-
-.nav-btn:hover, .nav-btn.active {
-  background: var(--panel);
-  border-color: var(--cyan);
-  color: var(--cyan);
-}
-
-/* HEADER RIGHT */
-.header-right {
-  text-align: right;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px;
-  color: var(--mid);
-  line-height: 2;
-}
-
-.live-dot {
-  display: inline-block;
-  width: 8px; height: 8px;
-  background: var(--green);
-  border-radius: 50%;
-  margin-right: 6px;
-  animation: pulse 2s infinite;
-}
-
+.nav-btn:hover, .nav-btn.active { background:var(--panel); border-color:var(--cyan); color:var(--cyan); }
+.header-right { text-align:right; font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--mid); line-height:2; }
+.live-dot { display:inline-block; width:8px; height:8px; background:var(--green); border-radius:50%; margin-right:6px; animation:pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
-/* ===== PAGES ===== */
-.page { display: none; padding: 40px 48px 80px; }
-.page.active { display: block; }
-
-/* SECTION TITLE */
-.sec-title {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: var(--gold);
-  padding: 0 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 4px;
+/* DAILY FOCUS BAR */
+.focus-bar {
+  background:var(--deep); border-bottom:1px solid var(--border);
+  padding:10px 40px; display:flex; align-items:center; gap:16px;
 }
-
-.sec-title::after {
-  content:'';
-  flex:1;
-  height:1px;
-  background: linear-gradient(90deg, var(--border-bright), transparent);
+.focus-label { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; white-space:nowrap; }
+.focus-input {
+  flex:1; background:transparent; border:none; border-bottom:1px solid var(--border-bright);
+  color:var(--white); font-family:'Exo 2',sans-serif; font-size:16px;
+  padding:4px 8px; outline:none;
 }
+.focus-input:focus { border-bottom-color:var(--gold); }
+.focus-save { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; background:transparent; border:1px solid var(--gold-dim); color:var(--gold); padding:6px 14px; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+.focus-save:hover { background:var(--gold); color:var(--void); }
+
+/* PAGES */
+.page { display:none; padding:32px 40px 80px; }
+.page.active { display:block; }
+
+/* SECTION */
+.sec { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); padding:0 0 16px; display:flex; align-items:center; gap:16px; margin-bottom:4px; }
+.sec::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border-bright),transparent); }
 
 /* NORTH STAR */
-.north-star {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--gold);
-  padding: 32px 40px;
-  margin-bottom: 4px;
-}
-
-.ns-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-
-.ns-text {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(14px, 1.8vw, 20px);
-  color: var(--white);
-  font-weight: 400;
-  line-height: 1.6;
-  max-width: 800px;
-}
-
-.ns-sub {
-  margin-top: 12px;
-  font-size: 16px;
-  color: var(--light);
-  font-style: italic;
-}
+.north-star { background:var(--panel); border:1px solid var(--border); border-left:4px solid var(--gold); padding:28px 36px; margin-bottom:4px; }
+.ns-label { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:4px; color:var(--gold); text-transform:uppercase; margin-bottom:10px; }
+.ns-text { font-family:'Orbitron',sans-serif; font-size:clamp(13px,1.6vw,18px); color:var(--white); font-weight:400; line-height:1.6; max-width:800px; }
+.ns-sub { margin-top:10px; font-size:15px; color:var(--light); font-style:italic; }
 
 /* CHAIN */
-.chain {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 28px 36px;
-  margin-bottom: 4px;
-  font-size: 17px;
-  line-height: 2.2;
-  color: var(--light);
-}
+.chain { background:var(--card); border:1px solid var(--border); padding:24px 32px; margin-bottom:4px; font-size:16px; line-height:2.4; color:var(--light); }
+.chain strong { color:var(--gold); font-weight:700; }
+.arr { color:var(--cyan); margin:0 8px; }
 
-.chain strong { color: var(--gold); font-weight: 700; }
-.chain .arrow { color: var(--cyan); margin: 0 8px; }
+/* MILESTONES */
+.milestones { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:3px; margin-bottom:4px; }
+.milestone { background:var(--card); border:1px solid var(--border); padding:20px; text-align:center; }
+.ms-phase { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--mid); text-transform:uppercase; margin-bottom:6px; }
+.ms-val { font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700; color:var(--gold); display:block; margin-bottom:4px; }
+.ms-desc { font-size:13px; color:var(--light); line-height:1.4; }
+.ms-active { border-color:var(--cyan); }
+.ms-active .ms-val { color:var(--cyan); text-shadow:0 0 12px rgba(0,204,255,0.4); }
+
+/* CFO BOX */
+.cfo-box { background:var(--panel); border:1px solid var(--border); border-left:4px solid var(--red); padding:20px 28px; margin-bottom:4px; }
+.cfo-label { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:4px; color:var(--red); text-transform:uppercase; margin-bottom:10px; }
+.cfo-rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:8px; }
+.cfo-rule { font-size:15px; color:var(--light); padding:6px 0 6px 16px; border-left:2px solid var(--red); }
 
 /* PROJECT GRID */
-.proj-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 3px;
-  margin-bottom: 4px;
-}
-
-.proj-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--border);
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.proj-card::before {
-  content:'';
-  position:absolute;
-  top:0; left:-100%;
-  width:100%; height:100%;
-  background: linear-gradient(90deg, transparent, rgba(0,204,255,0.04), transparent);
-  transition: left 0.5s;
-}
-
-.proj-card:hover::before { left:100%; }
-.proj-card:hover { border-color: var(--cyan-dim); border-top-color: var(--cyan); }
-
-.proj-header {
-  padding: 24px 28px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.proj-code {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: var(--cyan-dim);
-  margin-bottom: 6px;
-}
-
-.proj-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--white);
-  letter-spacing: 1px;
-}
-
-.proj-domain {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  color: var(--mid);
-  margin-top: 4px;
-}
-
-.status {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border-radius: 2px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.s-live    { background:rgba(0,255,136,0.1);  color:var(--green); border:1px solid var(--green); }
-.s-build   { background:rgba(255,153,0,0.1);   color:var(--amber); border:1px solid var(--amber); }
-.s-wait    { background:rgba(255,68,85,0.1);   color:var(--red);   border:1px solid var(--red); }
-.s-idea    { background:rgba(0,204,255,0.1);   color:var(--cyan);  border:1px solid var(--cyan-dim); }
-
-.proj-body { padding: 20px 28px 24px; }
-
-.proj-desc {
-  font-size: 16px;
-  color: var(--light);
-  line-height: 1.6;
-  margin-bottom: 20px;
-  font-style: italic;
-}
-
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 2px;
-  margin-bottom: 20px;
-}
-
-.metric {
-  background: var(--panel);
-  padding: 12px;
-  text-align: center;
-}
-
-.metric-val {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--gold);
-  display: block;
-  line-height: 1;
-}
-
-.metric-lbl {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--mid);
-  display: block;
-  margin-top: 5px;
-}
-
-.next-act {
-  background: var(--panel);
-  border-left: 3px solid var(--gold);
-  padding: 14px 18px;
-  margin-bottom: 14px;
-}
-
-.next-lbl {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 3px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.next-txt {
-  font-size: 16px;
-  color: var(--white);
-  line-height: 1.6;
-}
-
-.blocker-lbl {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 3px;
-  color: var(--red);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.blocker {
-  font-size: 15px;
-  color: #d08080;
-  padding: 3px 0 3px 18px;
-  position: relative;
-  line-height: 1.5;
-}
-
+.proj-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:3px; margin-bottom:4px; }
+.proj-card { background:var(--card); border:1px solid var(--border); border-top:3px solid var(--border); cursor:pointer; transition:all 0.2s; position:relative; overflow:hidden; }
+.proj-card:hover { border-top-color:var(--cyan); }
+.proj-header { padding:20px 24px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.proj-code { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--cyan-dim); margin-bottom:4px; }
+.proj-title { font-family:'Orbitron',sans-serif; font-size:18px; font-weight:700; color:var(--white); letter-spacing:1px; }
+.proj-domain { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--mid); margin-top:3px; }
+.status { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; padding:4px 10px; border-radius:2px; white-space:nowrap; flex-shrink:0; }
+.s-live { background:rgba(0,255,136,0.1); color:var(--green); border:1px solid var(--green); }
+.s-build { background:rgba(255,153,0,0.1); color:var(--amber); border:1px solid var(--amber); }
+.s-wait { background:rgba(255,68,85,0.1); color:var(--red); border:1px solid var(--red); }
+.s-idea { background:rgba(0,204,255,0.1); color:var(--cyan); border:1px solid var(--cyan-dim); }
+.proj-body { padding:18px 24px 20px; }
+.proj-desc { font-size:15px; color:var(--light); line-height:1.6; margin-bottom:16px; font-style:italic; }
+.metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-bottom:16px; }
+.metric { background:var(--panel); padding:10px; text-align:center; }
+.metric-val { font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700; color:var(--gold); display:block; line-height:1; }
+.metric-lbl { font-family:'Share Tech Mono',monospace; font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--mid); display:block; margin-top:4px; }
+.next-act { background:var(--panel); border-left:3px solid var(--gold); padding:12px 16px; margin-bottom:12px; }
+.next-lbl { font-family:'Share Tech Mono',monospace; font-size:8px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:4px; }
+.next-txt { font-size:15px; color:var(--white); line-height:1.5; }
+.blocker-lbl { font-family:'Share Tech Mono',monospace; font-size:8px; letter-spacing:3px; color:var(--red); text-transform:uppercase; margin-bottom:4px; }
+.blocker { font-size:14px; color:#d08080; padding:2px 0 2px 16px; position:relative; line-height:1.4; }
 .blocker::before { content:'!'; position:absolute; left:0; color:var(--red); font-family:'Share Tech Mono',monospace; font-weight:700; }
+.rev-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0 0; border-top:1px solid var(--border); margin-top:10px; }
+.rev-lbl { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--mid); }
+.rev-val { font-family:'Orbitron',sans-serif; font-size:15px; font-weight:700; color:var(--green); }
+.open-btn { width:100%; margin-top:12px; background:transparent; border:1px solid var(--border-bright); color:var(--cyan); font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; padding:9px; cursor:pointer; transition:all 0.2s; }
+.open-btn:hover { background:var(--cyan); color:var(--void); }
 
-.rev-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0 0;
-  border-top: 1px solid var(--border);
-  margin-top: 12px;
-}
+/* ARTIST CARDS */
+.artist-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:3px; margin-bottom:4px; }
+.artist-card { background:var(--card); border:1px solid var(--border); padding:24px; }
+.artist-card.empty { border-style:dashed; border-color:var(--border-bright); }
+.artist-name { font-family:'Orbitron',sans-serif; font-size:18px; font-weight:700; color:var(--white); margin-bottom:4px; }
+.artist-tag { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:12px; }
+.artist-detail { font-size:15px; color:var(--light); padding:6px 0; border-bottom:1px solid var(--border); }
+.artist-detail:last-child { border-bottom:none; }
+.artist-detail strong { color:var(--white); }
+.artist-empty-msg { font-size:15px; color:var(--mid); font-style:italic; text-align:center; padding:20px 0; }
+.fill-btn { width:100%; margin-top:14px; background:transparent; border:1px solid var(--gold-dim); color:var(--gold); font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; padding:9px; cursor:pointer; transition:all 0.2s; }
+.fill-btn:hover { background:var(--gold); color:var(--void); }
 
-.rev-lbl { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--mid); }
-.rev-val { font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700; color:var(--green); }
-
-.open-btn {
-  width: 100%;
-  margin-top: 14px;
-  background: transparent;
-  border: 1px solid var(--border-bright);
-  color: var(--cyan);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  padding: 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.open-btn:hover {
-  background: var(--cyan);
-  color: var(--void);
-  border-color: var(--cyan);
-}
-
-/* ===== PROJECT DETAIL PAGE ===== */
-#proj-detail { display:none; padding: 40px 48px 80px; }
+/* DETAIL PAGE */
+#proj-detail { display:none; padding:32px 40px 80px; }
 #proj-detail.active { display:block; }
+.back-btn { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); background:transparent; border:1px solid var(--border-bright); padding:9px 18px; cursor:pointer; margin-bottom:28px; display:inline-block; transition:all 0.2s; }
+.back-btn:hover { background:var(--panel); }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; margin-bottom:3px; }
+.detail-panel { background:var(--card); border:1px solid var(--border); padding:24px 28px; }
+.detail-panel h3 { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.edit-label { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--mid); margin-bottom:5px; display:block; }
+.edit-field { width:100%; background:var(--panel); border:1px solid var(--border); border-bottom:2px solid var(--cyan-dim); color:var(--white); font-family:'Exo 2',sans-serif; font-size:15px; padding:10px 12px; margin-bottom:10px; outline:none; resize:vertical; transition:border-color 0.2s; }
+.edit-field:focus { border-bottom-color:var(--cyan); }
+.save-btn { background:transparent; border:1px solid var(--green); color:var(--green); font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; padding:10px 20px; cursor:pointer; transition:all 0.2s; margin-top:6px; }
+.save-btn:hover { background:var(--green); color:var(--void); }
+.save-status { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--green); margin-left:10px; display:none; }
 
-.back-btn {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--cyan);
-  background: transparent;
-  border: 1px solid var(--border-bright);
-  padding: 10px 20px;
-  cursor: pointer;
-  margin-bottom: 32px;
-  display: inline-block;
-  transition: all 0.2s;
-}
+/* CLAUDE AGENT PANEL */
+.claude-panel { background:var(--card); border:1px solid var(--border); border-top:3px solid var(--cyan); margin-bottom:3px; }
+.claude-header { padding:16px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.claude-title { font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700; color:var(--cyan); letter-spacing:2px; }
+.claude-status { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--green); }
+.claude-body { padding:20px 24px; }
+.claude-messages { background:var(--panel); border:1px solid var(--border); min-height:200px; max-height:320px; overflow-y:auto; padding:16px; margin-bottom:12px; font-size:15px; line-height:1.7; }
+.msg-user { color:var(--gold); margin-bottom:12px; }
+.msg-user::before { content:'YOU ▶ '; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; }
+.msg-claude { color:var(--light); margin-bottom:16px; padding-left:16px; border-left:2px solid var(--cyan-dim); }
+.msg-claude::before { content:'EXCALIBUR ▶ '; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--cyan); display:block; margin-bottom:4px; }
+.msg-thinking { color:var(--mid); font-style:italic; font-size:14px; }
+.claude-input-row { display:flex; gap:8px; }
+.claude-input { flex:1; background:var(--panel); border:1px solid var(--border); border-bottom:2px solid var(--cyan-dim); color:var(--white); font-family:'Exo 2',sans-serif; font-size:15px; padding:10px 14px; outline:none; }
+.claude-input:focus { border-bottom-color:var(--cyan); }
+.claude-send { background:transparent; border:1px solid var(--cyan); color:var(--cyan); font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; padding:10px 20px; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+.claude-send:hover { background:var(--cyan); color:var(--void); }
+.claude-context { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--mid); margin-top:8px; letter-spacing:1px; }
 
-.back-btn:hover { background: var(--panel); }
+/* INCOME */
+.income-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:3px; margin-bottom:4px; }
+.income-box { background:var(--card); border:1px solid var(--border); padding:20px 24px; text-align:center; }
+.income-box-val { font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; color:var(--green); display:block; text-shadow:0 0 16px rgba(0,255,136,0.3); }
+.income-box-lbl { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--mid); display:block; margin-top:4px; }
+.income-form { background:var(--card); border:1px solid var(--border); padding:24px 28px; margin-bottom:4px; }
+.income-form h3 { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; align-items:end; }
+.income-table { background:var(--card); border:1px solid var(--border); padding:24px 28px; }
+.income-table h3 { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+table { width:100%; border-collapse:collapse; }
+th { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--mid); padding:8px 10px; text-align:left; border-bottom:1px solid var(--border); }
+td { font-size:14px; color:var(--light); padding:10px 10px; border-bottom:1px solid var(--border); }
+td.amount { color:var(--green); font-family:'Orbitron',sans-serif; font-weight:700; }
+td.project { color:var(--cyan); font-family:'Share Tech Mono',monospace; font-size:11px; }
 
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px;
-  margin-bottom: 3px;
-}
+/* TRACKING */
+.tracking-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:3px; margin-bottom:4px; }
+.track-card { background:var(--card); border:1px solid var(--border); padding:20px 24px; }
+.track-site { font-family:'Orbitron',sans-serif; font-size:15px; font-weight:700; color:var(--white); margin-bottom:4px; }
+.track-url { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--cyan); margin-bottom:14px; }
+.track-ga { display:inline-block; background:transparent; border:1px solid var(--border-bright); color:var(--mid); font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; padding:6px 12px; cursor:pointer; text-decoration:none; transition:all 0.2s; margin-right:6px; margin-bottom:6px; }
+.track-ga:hover { border-color:var(--cyan); color:var(--cyan); }
+.track-code { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--gold); margin-top:8px; }
 
-.detail-panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 28px 32px;
-}
+/* ASSETS */
+.assets-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:3px; }
+.asset-block { background:var(--card); border:1px solid var(--border); padding:20px 24px; }
+.asset-block h3 { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.asset-item { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); gap:10px; }
+.asset-item:last-child { border-bottom:none; }
+.asset-name { font-size:14px; color:var(--white); font-weight:600; }
+.asset-url { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--cyan); text-decoration:none; word-break:break-all; }
+.asset-url:hover { color:var(--white); }
 
-.detail-panel h3 {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-}
+/* PROMPTS */
+.prompts-grid { display:grid; grid-template-columns:1fr; gap:3px; }
+.prompt-block { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--cyan-dim); padding:20px 24px; }
+.prompt-block:hover { border-left-color:var(--cyan); }
+.prompt-title { font-family:'Orbitron',sans-serif; font-size:15px; font-weight:700; color:var(--white); margin-bottom:4px; }
+.prompt-use { font-size:13px; color:var(--mid); font-style:italic; margin-bottom:12px; }
+.prompt-text { font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--light); line-height:1.9; background:var(--panel); padding:14px 18px; border:1px solid var(--border); white-space:pre-wrap; margin-bottom:10px; }
+.copy-btn { background:transparent; border:1px solid var(--border-bright); color:var(--mid); font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; padding:7px 14px; cursor:pointer; transition:all 0.2s; }
+.copy-btn:hover { border-color:var(--cyan); color:var(--cyan); }
+.copy-btn.copied { color:var(--green); border-color:var(--green); }
 
-.edit-field {
-  width: 100%;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-bottom: 2px solid var(--cyan-dim);
-  color: var(--white);
-  font-family: 'Exo 2', sans-serif;
-  font-size: 16px;
-  padding: 12px 14px;
-  margin-bottom: 10px;
-  outline: none;
-  resize: vertical;
-  transition: border-color 0.2s;
-}
-
-.edit-field:focus {
-  border-bottom-color: var(--cyan);
-  box-shadow: 0 2px 12px rgba(0,204,255,0.15);
-}
-
-.edit-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--mid);
-  margin-bottom: 6px;
-  display: block;
-}
-
-.save-btn {
-  background: transparent;
-  border: 1px solid var(--green);
-  color: var(--green);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  padding: 12px 24px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 8px;
-}
-
-.save-btn:hover {
-  background: var(--green);
-  color: var(--void);
-}
-
-.save-status {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  color: var(--green);
-  margin-left: 12px;
-  display: none;
-}
-
-/* CLAUDE LINK */
-.claude-link {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--cyan);
-  padding: 24px 32px;
-  margin-bottom: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.claude-link-text {
-  font-size: 16px;
-  color: var(--light);
-}
-
-.claude-link-text strong { color: var(--cyan); }
-
-.claude-open-btn {
-  background: transparent;
-  border: 1px solid var(--cyan);
-  color: var(--cyan);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  padding: 12px 24px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.claude-open-btn:hover {
-  background: var(--cyan);
-  color: var(--void);
-}
-
-/* ===== INCOME PAGE ===== */
-.income-summary {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 3px;
-  margin-bottom: 4px;
-}
-
-.income-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 24px 28px;
-  text-align: center;
-}
-
-.income-box-val {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--green);
-  display: block;
-  text-shadow: 0 0 20px rgba(0,255,136,0.3);
-}
-
-.income-box-lbl {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--mid);
-  display: block;
-  margin-top: 6px;
-}
-
-.income-form {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 28px 32px;
-  margin-bottom: 4px;
-}
-
-.income-form h3 {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 20px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 8px;
-  align-items: end;
-  margin-bottom: 12px;
-}
-
-.income-table {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 28px 32px;
-}
-
-.income-table h3 {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 20px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--mid);
-  padding: 10px 12px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-
-td {
-  font-size: 15px;
-  color: var(--light);
-  padding: 12px 12px;
-  border-bottom: 1px solid var(--border);
-}
-
-td.amount { color: var(--green); font-family: 'Orbitron', sans-serif; font-weight: 700; }
-td.project { color: var(--cyan); font-family: 'Share Tech Mono', monospace; font-size: 12px; }
-
-/* ===== ASSETS PAGE ===== */
-.assets-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 3px;
-}
-
-.asset-block {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 24px 28px;
-}
-
-.asset-block h3 {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-}
-
-.asset-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-  gap: 12px;
-}
-
-.asset-item:last-child { border-bottom: none; }
-
-.asset-name {
-  font-size: 15px;
-  color: var(--white);
-  font-weight: 600;
-}
-
-.asset-url {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  color: var(--cyan);
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.asset-url:hover { color: var(--white); }
-
-/* ===== PROMPTS PAGE ===== */
-.prompts-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 3px;
-}
-
-.prompt-block {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--cyan-dim);
-  padding: 24px 28px;
-}
-
-.prompt-block:hover { border-left-color: var(--cyan); }
-
-.prompt-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 8px;
-}
-
-.prompt-use {
-  font-size: 13px;
-  color: var(--mid);
-  font-style: italic;
-  margin-bottom: 14px;
-}
-
-.prompt-text {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 13px;
-  color: var(--light);
-  line-height: 1.9;
-  background: var(--panel);
-  padding: 16px 20px;
-  border: 1px solid var(--border);
-  white-space: pre-wrap;
-  margin-bottom: 12px;
-}
-
-.copy-btn {
-  background: transparent;
-  border: 1px solid var(--border-bright);
-  color: var(--mid);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
-.copy-btn.copied { color: var(--green); border-color: var(--green); }
-
-/* WEEKLY GRID */
-.week-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 3px;
-}
-
-.day-block {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 20px 24px;
-}
-
-.day-name {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--gold);
-  letter-spacing: 2px;
-  margin-bottom: 14px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-
-.day-task {
-  font-size: 15px;
-  color: var(--light);
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border);
-  line-height: 1.5;
-}
-
-.day-task:last-child { border-bottom: none; }
-.day-task strong { color: var(--white); font-weight: 700; }
+/* WEEKLY */
+.week-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:3px; }
+.day-block { background:var(--card); border:1px solid var(--border); padding:18px 22px; }
+.day-name { font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700; color:var(--gold); letter-spacing:2px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.day-task { font-size:14px; color:var(--light); padding:6px 0; border-bottom:1px solid var(--border); line-height:1.4; }
+.day-task:last-child { border-bottom:none; }
+.day-task strong { color:var(--white); font-weight:700; }
 
 /* FOOTER */
-footer {
-  position: relative;
-  z-index: 10;
-  background: var(--deep);
-  border-top: 1px solid var(--border);
-  padding: 20px 48px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
+footer { position:relative; z-index:10; background:var(--deep); border-top:1px solid var(--border); padding:16px 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+footer::before { content:''; position:absolute; top:-2px; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--gold-dim),transparent); }
+.foot-left { font-family:'Share Tech Mono',monospace; font-size:10px; color:#304050; letter-spacing:2px; }
+.foot-right { font-size:13px; font-style:italic; color:#304050; }
 
-footer::before {
-  content:'';
-  position:absolute;
-  top:-2px; left:0; right:0;
-  height:2px;
-  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-}
+/* MODAL */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:5000; display:none; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--deep); border:1px solid var(--border-bright); border-top:3px solid var(--gold); padding:32px; width:90%; max-width:500px; }
+.modal h3 { font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700; color:var(--gold); margin-bottom:20px; }
+.modal-close { float:right; background:transparent; border:none; color:var(--mid); font-size:20px; cursor:pointer; margin-top:-4px; }
+.modal-close:hover { color:var(--white); }
 
-.foot-left {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  color: #304050;
-  letter-spacing: 2px;
-}
-
-.foot-right {
-  font-size: 14px;
-  font-style: italic;
-  color: #304050;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  header, .page, #proj-detail, footer { padding-left: 20px; padding-right: 20px; }
-  header { grid-template-columns: 1fr; gap: 16px; }
-  .center-nav { flex-wrap: wrap; }
-  .detail-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr 1fr; }
+@media(max-width:768px) {
+  header,.page,#proj-detail,footer,.focus-bar { padding-left:20px; padding-right:20px; }
+  header { grid-template-columns:1fr; gap:12px; }
+  .detail-grid { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== LOCK SCREEN ===== -->
+<!-- LOCK -->
 <div id="lock-screen">
   <div class="lock-logo">EXCALIBUR</div>
   <div class="lock-sub">CaeseySolutions LLC · Private Command Centre</div>
   <div class="lock-form">
-    <div class="lock-label">Access Code Required</div>
+    <div class="lock-label">Access Code</div>
     <input type="password" class="lock-input" id="pwd-input" placeholder="••••••••" maxlength="20">
     <button class="lock-btn" onclick="checkPassword()">AUTHENTICATE</button>
-    <div class="lock-error" id="lock-error">⚠ ACCESS DENIED — INCORRECT CODE</div>
+    <div class="lock-error" id="lock-error">⚠ ACCESS DENIED</div>
   </div>
 </div>
 
-<!-- ===== MAIN APP ===== -->
+<!-- APP -->
 <div id="app">
 
 <header>
@@ -987,11 +348,14 @@ footer::before {
     <div class="brand-mission">Humanitarian Endowment Foundation · Infinity Bank</div>
   </div>
   <div class="center-nav">
-    <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
-    <button class="nav-btn" onclick="showPage('income')">Income</button>
-    <button class="nav-btn" onclick="showPage('assets')">Assets</button>
-    <button class="nav-btn" onclick="showPage('prompts')">Prompts</button>
-    <button class="nav-btn" onclick="showPage('weekly')">This Week</button>
+    <button class="nav-btn active" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button class="nav-btn" onclick="showPage('maison',this)">Maison Cordier</button>
+    <button class="nav-btn" onclick="showPage('income',this)">Income</button>
+    <button class="nav-btn" onclick="showPage('tracking',this)">Tracking</button>
+    <button class="nav-btn" onclick="showPage('assets',this)">Assets</button>
+    <button class="nav-btn" onclick="showPage('prompts',this)">Prompts</button>
+    <button class="nav-btn" onclick="showPage('weekly',this)">This Week</button>
+    <button class="nav-btn" onclick="showPage('agent',this)">⚡ Agent</button>
   </div>
   <div class="header-right">
     <span><span class="live-dot"></span>SYSTEM ACTIVE</span><br>
@@ -1000,88 +364,124 @@ footer::before {
   </div>
 </header>
 
-<!-- ===== DASHBOARD PAGE ===== -->
-<div class="page active" id="page-dashboard">
+<!-- DAILY FOCUS BAR -->
+<div class="focus-bar">
+  <div class="focus-label">▶ Today's Focus</div>
+  <input type="text" class="focus-input" id="focus-input" placeholder="What is the ONE thing you are doing today?">
+  <button class="focus-save" onclick="saveFocus()">SAVE</button>
+</div>
 
-  <div class="sec-title" style="padding-top:40px;">North Star</div>
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="sec" style="padding-top:32px;">North Star</div>
   <div class="north-star">
     <div class="ns-label">✦ Excalibur Infinity — The Purpose</div>
     <div class="ns-text">Build a self-funding humanitarian endowment bank that finances pro-survival campaigns — education, criminal reform, drug rehabilitation, human rights — permanently and untouchably. A legacy for generations. Not for one man. For the planet.</div>
     <div class="ns-sub">Foundation first. Survive today. Build the legacy tomorrow. The sword sharpens itself.</div>
   </div>
 
-  <div class="sec-title">The Chain</div>
+  <div class="sec">The Chain</div>
   <div class="chain">
-    <strong>Today</strong><span class="arrow">→</span>Maison Cordier + AirlessFix + DriveAlert generate survival cash<br>
-    <strong>Near Term</strong><span class="arrow">→</span>Czech English Engine feeds LITE / Applied Scholastics (Education Campaign)<br>
-    <strong>Phase 2</strong><span class="arrow">→</span>Sangambi Gold Mine supplies precious metals to the bank<br>
-    <strong>Phase 3</strong><span class="arrow">→</span>Excalibur Infinity Bank — 10:1 leverage — endowment fund grows<br>
-    <strong>Forever</strong><span class="arrow">→</span>Humanitarian campaigns funded — planet gets better — legacy secured
+    <strong>NOW</strong><span class="arr">→</span>Maison Cordier + AirlessFix + DriveAlert → survival cash<br>
+    <strong>NEAR</strong><span class="arr">→</span>Czech English Engine feeds LITE / Applied Scholastics (Education Campaign)<br>
+    <strong>PHASE 2</strong><span class="arr">→</span>Sangambi Gold Mine supplies precious metals to the bank<br>
+    <strong>PHASE 3</strong><span class="arr">→</span>Excalibur Infinity Bank — 10:1 leverage — endowment grows<br>
+    <strong>FOREVER</strong><span class="arr">→</span>Humanitarian campaigns funded — planet gets better — legacy secured
   </div>
 
-  <div class="sec-title">Active Operations</div>
+  <div class="sec">Milestones Toward The Bank</div>
+  <div class="milestones">
+    <div class="milestone ms-active">
+      <div class="ms-phase">Phase 0 — Now</div>
+      <span class="ms-val">Survive</span>
+      <div class="ms-desc">First €200. Projects generating cash. Bills paid.</div>
+    </div>
+    <div class="milestone">
+      <div class="ms-phase">Phase 1 — Months 1–6</div>
+      <span class="ms-val">€5,000</span>
+      <div class="ms-desc">Consistent monthly income. Czech engine live. AirlessFix running.</div>
+    </div>
+    <div class="milestone">
+      <div class="ms-phase">Phase 2 — Year 1</div>
+      <span class="ms-val">Sangambi</span>
+      <div class="ms-desc">Gold JV producing. Precious metals position begins.</div>
+    </div>
+    <div class="milestone">
+      <div class="ms-phase">Phase 3 — Year 2–3</div>
+      <span class="ms-val">Excalibur Fund</span>
+      <div class="ms-desc">Endowment fund established. First institutional investment.</div>
+    </div>
+    <div class="milestone">
+      <div class="ms-phase">Phase 4 — Year 5+</div>
+      <span class="ms-val">The Bank</span>
+      <div class="ms-desc">Licensed. 10:1 leverage. Campaigns funded forever.</div>
+    </div>
+  </div>
+
+  <div class="sec">CFO Rules — Nothing Moves Without Passing This</div>
+  <div class="cfo-box">
+    <div class="cfo-label">⚠ Chief Financial Officer Rules</div>
+    <div class="cfo-rules">
+      <div class="cfo-rule">Nothing spends before it earns. Every euro must show a return path.</div>
+      <div class="cfo-rule">Free tools first. Paid tools only when free options are exhausted.</div>
+      <div class="cfo-rule">One step at a time. Test. Audit. Fix. Then next step.</div>
+      <div class="cfo-rule">No new projects until current ones generate cash.</div>
+      <div class="cfo-rule">Revenue before infrastructure. Build what sells, not what looks good.</div>
+      <div class="cfo-rule">Track every euro in and out. What gets measured gets managed.</div>
+    </div>
+  </div>
+
+  <div class="sec">Active Operations</div>
   <div class="proj-grid">
 
-    <div class="proj-card" onclick="openProject('maison')">
+    <div class="proj-card" onclick="showPage('maison', document.querySelector('.nav-btn:nth-child(2)'))">
       <div class="proj-header">
         <div>
-          <div class="proj-code">OP-01 · ARTS & CULTURE</div>
+          <div class="proj-code">OP-01 · ARTS & CULTURE · INCOME NOW</div>
           <div class="proj-title">Maison Cordier</div>
           <div class="proj-domain">maisoncordier.art</div>
         </div>
         <div class="status s-live">Live</div>
       </div>
       <div class="proj-body">
-        <div class="proj-desc">European art curation. Scottish painter Kirsteen live. French artist incoming. Instagram launched. 15% commission model.</div>
+        <div class="proj-desc">European art curation. Kirsteen (Scottish) live at €1,095. French artist pending. Instagram launched. 15% commission.</div>
         <div class="metrics">
           <div class="metric"><span class="metric-val">2</span><span class="metric-lbl">Artists</span></div>
-          <div class="metric"><span class="metric-val">€595</span><span class="metric-lbl">Per Painting</span></div>
+          <div class="metric"><span class="metric-val">€1,095</span><span class="metric-lbl">Kirsteen</span></div>
           <div class="metric"><span class="metric-val">15%</span><span class="metric-lbl">Your Cut</span></div>
         </div>
-        <div class="next-act">
-          <div class="next-lbl">▶ Next Action</div>
-          <div class="next-txt">Write 7 Instagram posts. Get French artist name + images. Post daily.</div>
-        </div>
+        <div class="next-act"><div class="next-lbl">▶ Next Action</div><div class="next-txt">Write 7 Instagram posts. Get French artist details. Post daily.</div></div>
         <div class="blocker-lbl">! Blockers</div>
-        <div class="blocker">French artist details not captured</div>
-        <div class="blocker">No Instagram content plan</div>
+        <div class="blocker">French artist details not captured yet</div>
+        <div class="blocker">No Instagram content plan written</div>
         <div class="blocker">Zero sales — first sale is the milestone</div>
-        <div class="rev-row">
-          <span class="rev-lbl">Week 1 Target</span>
-          <span class="rev-val">1 Painting = €89</span>
-        </div>
-        <button class="open-btn">OPEN PROJECT ▶</button>
+        <div class="rev-row"><span class="rev-lbl">1 Sale Target</span><span class="rev-val">€164 to you</span></div>
+        <button class="open-btn">OPEN MAISON CORDIER ▶</button>
       </div>
     </div>
 
     <div class="proj-card" onclick="openProject('drivealert')">
       <div class="proj-header">
         <div>
-          <div class="proj-code">OP-02 · AFFILIATE</div>
+          <div class="proj-code">OP-02 · AFFILIATE · INCOME NOW</div>
           <div class="proj-title">DriveAlert</div>
           <div class="proj-domain">drivealert.eu · drivealert.be</div>
         </div>
         <div class="status s-build">Partial</div>
       </div>
       <div class="proj-body">
-        <div class="proj-desc">OOONO CO-DRIVER affiliate. Amazon.de live. BE and FR visitors hit German pages — conversion killer.</div>
+        <div class="proj-desc">OOONO CO-DRIVER affiliate. Amazon.de live. BE and FR visitors hitting German pages — conversion killer.</div>
         <div class="metrics">
           <div class="metric"><span class="metric-val">2</span><span class="metric-lbl">Sites Live</span></div>
           <div class="metric"><span class="metric-val">DE ✓</span><span class="metric-lbl">Market</span></div>
           <div class="metric"><span class="metric-val">NL FR ✗</span><span class="metric-lbl">Missing</span></div>
         </div>
-        <div class="next-act">
-          <div class="next-lbl">▶ Next Action</div>
-          <div class="next-txt">Apply Amazon.nl Associates. Apply Amazon.fr Associates. Both free.</div>
-        </div>
+        <div class="next-act"><div class="next-lbl">▶ Next Action</div><div class="next-txt">Apply Amazon.nl Associates. Apply Amazon.fr Associates. Both free.</div></div>
         <div class="blocker-lbl">! Blockers</div>
         <div class="blocker">Amazon.nl Associates not set up</div>
         <div class="blocker">Amazon.fr Associates not set up</div>
         <div class="blocker">OOONO direct outreach — no response</div>
-        <div class="rev-row">
-          <span class="rev-lbl">Model</span>
-          <span class="rev-val">Affiliate Commission</span>
-        </div>
+        <div class="rev-row"><span class="rev-lbl">Model</span><span class="rev-val">Affiliate Commission</span></div>
         <button class="open-btn">OPEN PROJECT ▶</button>
       </div>
     </div>
@@ -1089,31 +489,25 @@ footer::before {
     <div class="proj-card" onclick="openProject('airlessfix')">
       <div class="proj-header">
         <div>
-          <div class="proj-code">OP-03 · TECH SUPPORT</div>
+          <div class="proj-code">OP-03 · TECH SUPPORT · INCOME SOON</div>
           <div class="proj-title">AirlessFix</div>
           <div class="proj-domain">airlessfix.eu</div>
         </div>
         <div class="status s-build">Built · Not Live</div>
       </div>
       <div class="proj-body">
-        <div class="proj-desc">AI tech support for Graco Magnum sprayers. Marc persona. 5 languages. One afternoon from going live.</div>
+        <div class="proj-desc">AI tech support for Graco Magnum sprayers. Marc persona. 5 languages. One afternoon from live.</div>
         <div class="metrics">
           <div class="metric"><span class="metric-val">5</span><span class="metric-lbl">Languages</span></div>
           <div class="metric"><span class="metric-val">€3</span><span class="metric-lbl">Ko-fi Ask</span></div>
           <div class="metric"><span class="metric-val">A20–A100</span><span class="metric-lbl">Models</span></div>
         </div>
-        <div class="next-act">
-          <div class="next-lbl">▶ Next Action</div>
-          <div class="next-txt">Deploy Ko-fi. Activate email gate. Set Porkbun forwarding. Push live.</div>
-        </div>
+        <div class="next-act"><div class="next-lbl">▶ Next Action</div><div class="next-txt">Deploy Ko-fi. Activate email gate. Set Porkbun forwarding. Push live.</div></div>
         <div class="blocker-lbl">! Blockers</div>
         <div class="blocker">Ko-fi not deployed</div>
         <div class="blocker">Email gate not activated</div>
-        <div class="blocker">Google Sheets logging not connected</div>
-        <div class="rev-row">
-          <span class="rev-lbl">Model</span>
-          <span class="rev-val">Donations + Manuals</span>
-        </div>
+        <div class="blocker">GA code not yet added (add when live)</div>
+        <div class="rev-row"><span class="rev-lbl">Model</span><span class="rev-val">Donations + Manuals</span></div>
         <button class="open-btn">OPEN PROJECT ▶</button>
       </div>
     </div>
@@ -1128,23 +522,17 @@ footer::before {
         <div class="status s-idea">Concept</div>
       </div>
       <div class="proj-body">
-        <div class="proj-desc">Independent lead-gen for English learners in Czech cities. Feeds LITE — Applied Scholastics. Protects the education humanitarian campaign.</div>
+        <div class="proj-desc">Independent lead-gen for English learners in Czech cities. Feeds LITE — Applied Scholastics. Protects the education campaign.</div>
         <div class="metrics">
           <div class="metric"><span class="metric-val">13</span><span class="metric-lbl">LITE Locations</span></div>
           <div class="metric"><span class="metric-val">0</span><span class="metric-lbl">Competitors</span></div>
           <div class="metric"><span class="metric-val">€0</span><span class="metric-lbl">Budget Now</span></div>
         </div>
-        <div class="next-act">
-          <div class="next-lbl">▶ Next Action</div>
-          <div class="next-txt">Fund first via Maison Cordier or AirlessFix. Then build landing page.</div>
-        </div>
+        <div class="next-act"><div class="next-lbl">▶ Next Action</div><div class="next-txt">Fund first. Then build GitHub Pages landing page.</div></div>
         <div class="blocker-lbl">! Blockers</div>
         <div class="blocker">No budget yet</div>
         <div class="blocker">Zuzanna not formally approached</div>
-        <div class="rev-row">
-          <span class="rev-lbl">Model</span>
-          <span class="rev-val">Referral Fee</span>
-        </div>
+        <div class="rev-row"><span class="rev-lbl">Model</span><span class="rev-val">Referral Fee</span></div>
         <button class="open-btn">OPEN PROJECT ▶</button>
       </div>
     </div>
@@ -1152,30 +540,24 @@ footer::before {
     <div class="proj-card" onclick="openProject('sangambi')">
       <div class="proj-header">
         <div>
-          <div class="proj-code">OP-05 · PHASE 2 · PRECIOUS METALS</div>
+          <div class="proj-code">OP-05 · PHASE 2 · BANK FOUNDATION</div>
           <div class="proj-title">Sangambi Gold JV</div>
-          <div class="proj-domain">Africa Ground Ops · AMLM Capital</div>
+          <div class="proj-domain">Africa Ground Ops · AMLM Capital · NASDAQ</div>
         </div>
         <div class="status s-wait">Waiting</div>
       </div>
       <div class="proj-body">
-        <div class="proj-desc">Gold mine JV. Kristof + Jon = Africa ground ops. Ryan + Frank (AMLM) = capital + NASDAQ. Phase 2 of the Excalibur bank gold supply chain.</div>
+        <div class="proj-desc">Gold mine JV. Kristof + Jon (Nuedge) = Africa ground ops. Ryan + Frank (AMLM) = capital + NASDAQ. Phase 2 of the bank — gold supply chain.</div>
         <div class="metrics">
           <div class="metric"><span class="metric-val">NI 43-101</span><span class="metric-lbl">Verified</span></div>
           <div class="metric"><span class="metric-val">S-1</span><span class="metric-lbl">AMLM Filing</span></div>
           <div class="metric"><span class="metric-val">Phase 2</span><span class="metric-lbl">Bank Plan</span></div>
         </div>
-        <div class="next-act">
-          <div class="next-lbl">▶ Next Action</div>
-          <div class="next-txt">Hold. Ryan reposted on LinkedIn — green signal. Wait for proposal. Do not chase.</div>
-        </div>
+        <div class="next-act"><div class="next-lbl">▶ Next Action</div><div class="next-txt">Hold. Ryan reposted on LinkedIn — green signal. Wait for proposal. Do not chase.</div></div>
         <div class="blocker-lbl">! Blockers</div>
-        <div class="blocker">Investor proposal not received</div>
+        <div class="blocker">Investor proposal not yet received</div>
         <div class="blocker">Namibia copper details pending</div>
-        <div class="rev-row">
-          <span class="rev-lbl">Role</span>
-          <span class="rev-val">Feeds The Bank</span>
-        </div>
+        <div class="rev-row"><span class="rev-lbl">Role</span><span class="rev-val">Feeds The Bank</span></div>
         <button class="open-btn">OPEN PROJECT ▶</button>
       </div>
     </div>
@@ -1183,37 +565,92 @@ footer::before {
   </div>
 </div>
 
-<!-- ===== PROJECT DETAIL ===== -->
-<div id="proj-detail">
-  <button class="back-btn" onclick="closeProject()">← BACK TO DASHBOARD</button>
+<!-- MAISON CORDIER PAGE -->
+<div class="page" id="page-maison" style="display:none;">
+  <div class="sec" style="padding-top:32px;">Maison Cordier — Artist Roster</div>
+  <div class="artist-grid">
 
-  <div class="claude-link">
-    <div class="claude-link-text">
-      <strong>Open Claude session for this project</strong> — paste the brief and start working immediately
+    <div class="artist-card">
+      <div class="artist-name">Kirsteen Lyons-Benson</div>
+      <div class="artist-tag">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Artist — Active</div>
+      <div class="artist-detail"><strong>Style:</strong> Scottish seascapes, landscapes, oil on canvas</div>
+      <div class="artist-detail"><strong>Price:</strong> €1,095 per original painting</div>
+      <div class="artist-detail"><strong>Commission:</strong> 15% to Maison Cordier = €164 per sale</div>
+      <div class="artist-detail"><strong>Website:</strong> kirsteenart.com</div>
+      <div class="artist-detail"><strong>Instagram:</strong> @kirsteen_art</div>
+      <div class="artist-detail"><strong>Email:</strong> kirsteenann@gmail.com</div>
+      <div class="artist-detail"><strong>Agreement:</strong> Verbal — EU distribution, she handles UK/global</div>
+      <div class="artist-detail"><strong>Stripe:</strong> 5 paintings set up — payment links ready</div>
     </div>
-    <a href="https://claude.ai" target="_blank" class="claude-open-btn">OPEN CLAUDE ▶</a>
+
+    <div class="artist-card empty">
+      <div class="artist-name">French Artist</div>
+      <div class="artist-tag">🇫🇷 French Artist — Pending Details</div>
+      <div class="artist-empty-msg">Awaiting reply to email.<br>Fill in details when she responds.</div>
+      <button class="fill-btn" onclick="openFrenchArtist()">FILL IN DETAILS WHEN READY</button>
+      <div id="french-details" style="display:none; margin-top:14px;">
+        <label class="edit-label">Name</label>
+        <input type="text" class="edit-field" id="fr-name" placeholder="Artist name">
+        <label class="edit-label">Style</label>
+        <input type="text" class="edit-field" id="fr-style" placeholder="Painting style">
+        <label class="edit-label">Price per painting (€)</label>
+        <input type="number" class="edit-field" id="fr-price" placeholder="0">
+        <label class="edit-label">Email</label>
+        <input type="text" class="edit-field" id="fr-email" placeholder="Email address">
+        <label class="edit-label">Instagram</label>
+        <input type="text" class="edit-field" id="fr-instagram" placeholder="@handle">
+        <label class="edit-label">Notes</label>
+        <textarea class="edit-field" id="fr-notes" rows="2" placeholder="Any notes"></textarea>
+        <button class="save-btn" onclick="saveFrenchArtist()">SAVE ARTIST</button>
+      </div>
+    </div>
+
   </div>
 
+  <div class="sec">Instagram Strategy</div>
+  <div class="detail-panel" style="margin-bottom:3px;">
+    <h3>30-Day Instagram Plan — @maisoncordier</h3>
+    <div style="font-size:15px; color:var(--light); line-height:1.9;">
+      <strong style="color:var(--gold);">Week 1 — Introduce the House</strong><br>
+      Post 1: Who is Maison Cordier? The story behind the curation.<br>
+      Post 2: Kirsteen's Scotland — the light, the sea, the inspiration.<br>
+      Post 3: One painting close-up — texture, detail, craftsmanship.<br>
+      Post 4: "Scotland meets France" — teaser for second artist.<br>
+      <br>
+      <strong style="color:var(--gold);">Week 2 — The Artists</strong><br>
+      Post 5: Full Kirsteen profile — who she is, how she paints.<br>
+      Post 6: French artist reveal — name, style, first image.<br>
+      Post 7: Side by side — two artists, two countries, one house.<br>
+      <br>
+      <strong style="color:var(--gold);">Week 3 — The Work</strong><br>
+      Post 8-11: One painting per post. Story behind each piece.<br>
+      <br>
+      <strong style="color:var(--gold);">Week 4 — The Collector</strong><br>
+      Post 12-14: Why collect original art. How to buy. Shipping to Europe.<br>
+      <br>
+      <strong style="color:var(--gold);">Hashtags to use every post:</strong><br>
+      #originalart #scottishart #artcollector #europeanart #interiordesign #maisoncordier #buyart #contemporarypainting #artforsale #homedecor
+    </div>
+  </div>
+</div>
+
+<!-- PROJECT DETAIL -->
+<div id="proj-detail">
+  <button class="back-btn" onclick="closeProject()">← BACK TO DASHBOARD</button>
   <div class="detail-grid">
     <div class="detail-panel">
       <h3>Project Status</h3>
-      <label class="edit-label">Current Status</label>
+      <label class="edit-label">Status</label>
       <select class="edit-field" id="d-status">
-        <option>Live</option>
-        <option>Building</option>
-        <option>Waiting</option>
-        <option>Concept</option>
-        <option>Paused</option>
-        <option>Complete</option>
+        <option>Live</option><option>Building</option><option>Waiting</option><option>Concept</option><option>Paused</option><option>Complete</option>
       </select>
       <label class="edit-label">Next Action</label>
       <textarea class="edit-field" id="d-next" rows="3"></textarea>
       <label class="edit-label">Blockers</label>
       <textarea class="edit-field" id="d-blockers" rows="3"></textarea>
-      <button class="save-btn" onclick="saveProject()">SAVE CHANGES</button>
+      <button class="save-btn" onclick="saveProject()">SAVE</button>
       <span class="save-status" id="save-status">✓ SAVED</span>
     </div>
-
     <div class="detail-panel">
       <h3>Notes & Decisions</h3>
       <label class="edit-label">Notes</label>
@@ -1221,49 +658,30 @@ footer::before {
       <button class="save-btn" onclick="saveProject()">SAVE NOTES</button>
     </div>
   </div>
-
   <div class="detail-panel" style="margin-top:3px;">
-    <h3>Claude Brief — Copy This For This Project</h3>
+    <h3>Claude Brief — Copy for This Project</h3>
     <div class="prompt-text" id="d-brief">Loading...</div>
     <button class="copy-btn" onclick="copyBrief()">COPY BRIEF</button>
+    <a href="https://claude.ai" target="_blank" style="margin-left:10px;" class="copy-btn">OPEN CLAUDE ↗</a>
   </div>
 </div>
 
-<!-- ===== INCOME PAGE ===== -->
-<div class="page" id="page-income">
-  <div class="sec-title" style="padding-top:40px;">Income Tracker</div>
-
+<!-- INCOME -->
+<div class="page" id="page-income" style="display:none;">
+  <div class="sec" style="padding-top:32px;">Income Tracker</div>
   <div class="income-summary">
-    <div class="income-box">
-      <span class="income-box-val" id="total-income">€0</span>
-      <span class="income-box-lbl">Total Income</span>
-    </div>
-    <div class="income-box">
-      <span class="income-box-val" id="this-month">€0</span>
-      <span class="income-box-lbl">This Month</span>
-    </div>
-    <div class="income-box">
-      <span class="income-box-val" id="target-gap">€200</span>
-      <span class="income-box-lbl">Target Gap</span>
-    </div>
-    <div class="income-box">
-      <span class="income-box-val" id="entry-count">0</span>
-      <span class="income-box-lbl">Transactions</span>
-    </div>
+    <div class="income-box"><span class="income-box-val" id="total-income">€0</span><span class="income-box-lbl">Total Income</span></div>
+    <div class="income-box"><span class="income-box-val" id="this-month">€0</span><span class="income-box-lbl">This Month</span></div>
+    <div class="income-box"><span class="income-box-val" id="target-gap">€200</span><span class="income-box-lbl">Gap to €200 Target</span></div>
+    <div class="income-box"><span class="income-box-val" id="entry-count">0</span><span class="income-box-lbl">Transactions</span></div>
   </div>
-
   <div class="income-form">
     <h3>Log New Income</h3>
     <div class="form-row">
       <div>
         <label class="edit-label">Project</label>
         <select class="edit-field" id="inc-project">
-          <option>Maison Cordier</option>
-          <option>DriveAlert</option>
-          <option>AirlessFix</option>
-          <option>Czech English</option>
-          <option>Sangambi</option>
-          <option>Other</option>
+          <option>Maison Cordier</option><option>DriveAlert</option><option>AirlessFix</option><option>Czech English</option><option>Sangambi</option><option>Other</option>
         </select>
       </div>
       <div>
@@ -1274,371 +692,340 @@ footer::before {
         <label class="edit-label">Description</label>
         <input type="text" class="edit-field" id="inc-desc" placeholder="e.g. Painting sale - Kirsteen">
       </div>
-      <div>
-        <button class="save-btn" style="margin-top:22px;" onclick="logIncome()">LOG IT</button>
-      </div>
+      <div><button class="save-btn" style="margin-top:22px;" onclick="logIncome()">LOG IT</button></div>
     </div>
   </div>
-
   <div class="income-table">
     <h3>Income Log</h3>
     <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Project</th>
-          <th>Description</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-      <tbody id="income-tbody">
-        <tr><td colspan="4" style="color:var(--mid); text-align:center; padding:24px;">No income logged yet. First euro incoming.</td></tr>
-      </tbody>
+      <thead><tr><th>Date</th><th>Project</th><th>Description</th><th>Amount</th></tr></thead>
+      <tbody id="income-tbody"><tr><td colspan="4" style="color:var(--mid);text-align:center;padding:24px;">No income logged yet. First euro incoming.</td></tr></tbody>
     </table>
   </div>
 </div>
 
-<!-- ===== ASSETS PAGE ===== -->
-<div class="page" id="page-assets">
-  <div class="sec-title" style="padding-top:40px;">Asset Registry</div>
-  <div class="assets-grid">
-
-    <div class="asset-block">
-      <h3>Live Websites</h3>
-      <div class="asset-item">
-        <span class="asset-name">Maison Cordier</span>
-        <a class="asset-url" href="https://maisoncordier.art" target="_blank">maisoncordier.art ↗</a>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">DriveAlert EU</span>
-        <a class="asset-url" href="https://drivealert.eu" target="_blank">drivealert.eu ↗</a>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">DriveAlert BE</span>
-        <a class="asset-url" href="https://drivealert.be" target="_blank">drivealert.be ↗</a>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">AirlessFix</span>
-        <a class="asset-url" href="https://airlessfix.eu" target="_blank">airlessfix.eu ↗</a>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">CaeseySolutions</span>
-        <a class="asset-url" href="https://caeseysolutions.com" target="_blank">caeseysolutions.com ↗</a>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">Excalibur Dashboard</span>
-        <a class="asset-url" href="https://caeseysolutions.github.io/excaliber" target="_blank">github.io/excaliber ↗</a>
-      </div>
+<!-- TRACKING -->
+<div class="page" id="page-tracking" style="display:none;">
+  <div class="sec" style="padding-top:32px;">Traffic Tracking — Google Analytics</div>
+  <div class="tracking-grid">
+    <div class="track-card">
+      <div class="track-site">DriveAlert EU</div>
+      <div class="track-url">drivealert.eu</div>
+      <a class="track-ga" href="https://analytics.google.com" target="_blank">Open GA Dashboard ↗</a>
+      <div class="track-code">G-NX1B2429ZH</div>
     </div>
-
-    <div class="asset-block">
-      <h3>GitHub Repositories</h3>
-      <div class="asset-item">
-        <span class="asset-name">Excaliber</span>
-        <a class="asset-url" href="https://github.com/Caeseysolutions/excaliber" target="_blank">Caeseysolutions/excaliber ↗</a>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">DriveAlert</span>
-        <a class="asset-url" href="https://github.com/Caeseysolutions" target="_blank">Caeseysolutions/drivealert ↗</a>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">AirlessFix</span>
-        <a class="asset-url" href="https://github.com/Caeseysolutions" target="_blank">Caeseysolutions/airlessfix ↗</a>
-      </div>
+    <div class="track-card">
+      <div class="track-site">DriveAlert BE</div>
+      <div class="track-url">drivealert.be</div>
+      <a class="track-ga" href="https://analytics.google.com" target="_blank">Open GA Dashboard ↗</a>
+      <div class="track-code">G-NX1B2429ZH</div>
     </div>
-
-    <div class="asset-block">
-      <h3>Key Contacts</h3>
-      <div class="asset-item">
-        <span class="asset-name">OOONO CEO</span>
-        <span class="asset-url">Christian Walther Øyrabø</span>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">OOONO Support</span>
-        <span class="asset-url">support@ooono.com</span>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">Kirsteen (Artist)</span>
-        <span class="asset-url">kirsteenann@gmail.com</span>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">AirlessFix Email</span>
-        <span class="asset-url">airlessfix@gmail.com</span>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">Zuzanna (LITE)</span>
-        <span class="asset-url">Prague · 20yr friend · lite.cz</span>
-      </div>
-      <div class="asset-item">
-        <span class="asset-name">Ryan + Frank (AMLM)</span>
-        <span class="asset-url">Sangambi investors · NASDAQ</span>
-      </div>
+    <div class="track-card">
+      <div class="track-site">Maison Cordier</div>
+      <div class="track-url">maisoncordier.art</div>
+      <a class="track-ga" href="https://analytics.google.com" target="_blank">Open GA Dashboard ↗</a>
+      <div class="track-code">G-116XS4MFSJ</div>
     </div>
-
-    <div class="asset-block">
-      <h3>Google Sheet — Excalibur Data</h3>
-      <div class="asset-item">
-        <span class="asset-name">Excaliber Sheet</span>
-        <a class="asset-url" href="https://docs.google.com/spreadsheets/d/18c7BtOa_qqzi0VfNDuYTbkY3UlXPrCUvlgk-che9GIA/edit" target="_blank">Open Sheet ↗</a>
-      </div>
-      <div style="margin-top:16px; font-size:14px; color:var(--mid); font-style:italic; line-height:1.7;">
-        This sheet is your data backup. All income, notes and project updates are stored here. If anything breaks — this sheet rebuilds everything.
-      </div>
+    <div class="track-card">
+      <div class="track-site">AirlessFix</div>
+      <div class="track-url">airlessfix.eu</div>
+      <div style="font-size:13px; color:var(--mid); font-style:italic; margin-top:8px;">Add GA code when site goes live</div>
     </div>
-
   </div>
 </div>
 
-<!-- ===== PROMPTS PAGE ===== -->
-<div class="page" id="page-prompts">
-  <div class="sec-title" style="padding-top:40px;">Claude Prompt Library</div>
+<!-- ASSETS -->
+<div class="page" id="page-assets" style="display:none;">
+  <div class="sec" style="padding-top:32px;">Asset Registry</div>
+  <div class="assets-grid">
+    <div class="asset-block">
+      <h3>Live Websites</h3>
+      <div class="asset-item"><span class="asset-name">Maison Cordier</span><a class="asset-url" href="https://maisoncordier.art" target="_blank">maisoncordier.art ↗</a></div>
+      <div class="asset-item"><span class="asset-name">DriveAlert EU</span><a class="asset-url" href="https://drivealert.eu" target="_blank">drivealert.eu ↗</a></div>
+      <div class="asset-item"><span class="asset-name">DriveAlert BE</span><a class="asset-url" href="https://drivealert.be" target="_blank">drivealert.be ↗</a></div>
+      <div class="asset-item"><span class="asset-name">AirlessFix</span><a class="asset-url" href="https://airlessfix.eu" target="_blank">airlessfix.eu ↗</a></div>
+      <div class="asset-item"><span class="asset-name">CaeseySolutions</span><a class="asset-url" href="https://caeseysolutions.com" target="_blank">caeseysolutions.com ↗</a></div>
+      <div class="asset-item"><span class="asset-name">Excalibur</span><a class="asset-url" href="https://caeseysolutions.github.io/excaliber" target="_blank">github.io/excaliber ↗</a></div>
+    </div>
+    <div class="asset-block">
+      <h3>GitHub Repos</h3>
+      <div class="asset-item"><span class="asset-name">excaliber</span><a class="asset-url" href="https://github.com/Caeseysolutions/excaliber" target="_blank">Caeseysolutions/excaliber ↗</a></div>
+      <div class="asset-item"><span class="asset-name">All repos</span><a class="asset-url" href="https://github.com/Caeseysolutions" target="_blank">github.com/Caeseysolutions ↗</a></div>
+    </div>
+    <div class="asset-block">
+      <h3>Google Analytics Codes</h3>
+      <div class="asset-item"><span class="asset-name">DriveAlert EU + BE</span><span class="asset-url">G-NX1B2429ZH</span></div>
+      <div class="asset-item"><span class="asset-name">Maison Cordier</span><span class="asset-url">G-116XS4MFSJ</span></div>
+      <div class="asset-item"><span class="asset-name">AirlessFix</span><span class="asset-url">Add when live</span></div>
+      <div class="asset-item"><span class="asset-name">GA Dashboard</span><a class="asset-url" href="https://analytics.google.com" target="_blank">analytics.google.com ↗</a></div>
+    </div>
+    <div class="asset-block">
+      <h3>Key Contacts</h3>
+      <div class="asset-item"><span class="asset-name">OOONO CEO</span><span class="asset-url">Christian Walther Øyrabø</span></div>
+      <div class="asset-item"><span class="asset-name">OOONO Support</span><span class="asset-url">support@ooono.com</span></div>
+      <div class="asset-item"><span class="asset-name">Kirsteen</span><span class="asset-url">kirsteenann@gmail.com</span></div>
+      <div class="asset-item"><span class="asset-name">AirlessFix</span><span class="asset-url">airlessfix@gmail.com</span></div>
+      <div class="asset-item"><span class="asset-name">Zuzanna — LITE</span><span class="asset-url">Prague · lite.cz</span></div>
+      <div class="asset-item"><span class="asset-name">Ryan + Frank — AMLM</span><span class="asset-url">Sangambi · NASDAQ</span></div>
+      <div class="asset-item"><span class="asset-name">Jon — Nuedge LLC</span><span class="asset-url">Africa ground ops partner</span></div>
+    </div>
+    <div class="asset-block">
+      <h3>Excalibur Data</h3>
+      <div class="asset-item"><span class="asset-name">Google Sheet</span><a class="asset-url" href="https://docs.google.com/spreadsheets/d/18c7BtOa_qqzi0VfNDuYTbkY3UlXPrCUvlgk-che9GIA/edit" target="_blank">Open Excaliber Sheet ↗</a></div>
+      <div style="margin-top:12px; font-size:13px; color:var(--mid); font-style:italic; line-height:1.7;">This sheet is your data backup. If anything breaks — this sheet rebuilds everything.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROMPTS -->
+<div class="page" id="page-prompts" style="display:none;">
+  <div class="sec" style="padding-top:32px;">Claude Prompt Library — Sub-Agent Briefs</div>
   <div class="prompts-grid">
 
     <div class="prompt-block">
-      <div class="prompt-title">Daily Session Brief</div>
-      <div class="prompt-use">Use this at the start of EVERY Claude conversation</div>
+      <div class="prompt-title">Daily Session Brief — Master</div>
+      <div class="prompt-use">Use at the START of every Claude conversation</div>
       <div class="prompt-text" id="daily-brief">Excalibur session. I am Kristof Cordier. CaeseySolutions LLC (Wyoming).
-
 MISSION: Build Excalibur Infinity Bank to fund humanitarian campaigns permanently.
-
 ACTIVE PROJECTS:
-1. Maison Cordier (maisoncordier.art) — Art curation. Kirsteen Scottish + French artist. Instagram live. Target: first sale.
-2. DriveAlert (drivealert.eu / .be) — OOONO affiliate. Amazon.de live. Need: .nl and .fr accounts.
-3. AirlessFix (airlessfix.eu) — Graco AI support. Marc built. Need: Ko-fi + email gate deployed.
-4. Czech English Engine — Lead-gen for LITE schools. Concept stage. Feeds education campaign.
-5. Sangambi Gold JV — Phase 2 of bank. Ryan + Frank (AMLM) pursuing investors. Waiting.
-
-MY RULES: One step at a time. Test before next. Zero unnecessary cost. Short punchy answers.
-
+1. Maison Cordier (maisoncordier.art) — Art. Kirsteen €1,095 + French artist pending. Instagram live.
+2. DriveAlert (drivealert.eu/.be) — OOONO affiliate. Amazon.de live. Need .nl and .fr accounts.
+3. AirlessFix (airlessfix.eu) — Graco AI support. Marc built. Need Ko-fi + email gate deployed.
+4. Czech English Engine — Lead-gen for LITE schools. Concept. Feeds education campaign.
+5. Sangambi Gold JV — Phase 2 of bank. Ryan + Frank (AMLM). Waiting on proposal.
+CFO RULES: Nothing spends before it earns. Free tools first. One step at a time.
 TODAY I want to work on: [FILL THIS IN]</div>
-      <button class="copy-btn" onclick="copyPrompt('daily-brief', this)">COPY PROMPT</button>
+      <button class="copy-btn" onclick="copyPrompt('daily-brief',this)">COPY PROMPT</button>
     </div>
 
     <div class="prompt-block">
-      <div class="prompt-title">Maison Cordier — Instagram Session</div>
-      <div class="prompt-use">Use when working on Maison Cordier Instagram content</div>
-      <div class="prompt-text" id="mc-prompt">Excalibur session — Maison Cordier focus.
-
-Maison Cordier (maisoncordier.art) is my European art curation platform.
-Artists: Kirsteen Lyons-Benson (Scottish, seascapes/landscapes, €595/painting) + French artist TBC.
-Commission: 15% on sales I generate.
+      <div class="prompt-title">Maison Cordier Agent</div>
+      <div class="prompt-use">Art curation, Instagram, sales, artists</div>
+      <div class="prompt-text" id="mc-prompt">Excalibur — Maison Cordier Agent.
+maisoncordier.art — European art curation platform.
+Artists: Kirsteen Lyons-Benson (Scottish, seascapes, €1,095/painting, 15% commission = €164/sale) + French artist TBC.
 Instagram: @maisoncordier — started March 2026.
-Target buyers: Europeans with disposable income, interior designers, collectors.
-
-The brand story: Scotland meets France. Two artists. One house. Curated for Europe.
-
-TODAY I need: [FILL THIS IN — e.g. 7 Instagram posts / hashtag strategy / caption for painting X]</div>
-      <button class="copy-btn" onclick="copyPrompt('mc-prompt', this)">COPY PROMPT</button>
+Target buyers: Europeans, interior designers, collectors.
+Brand: Scotland meets France. Two artists. One house. Curated for Europe.
+Kirsteen agreed: EU sales go through maisoncordier.art. She adds reciprocal links.
+TODAY: [FILL THIS IN]</div>
+      <button class="copy-btn" onclick="copyPrompt('mc-prompt',this)">COPY PROMPT</button>
     </div>
 
     <div class="prompt-block">
-      <div class="prompt-title">AirlessFix — Technical Session</div>
-      <div class="prompt-use">Use when working on AirlessFix deployment or Marc</div>
-      <div class="prompt-text" id="af-prompt">Excalibur session — AirlessFix focus.
-
-AirlessFix (airlessfix.eu) is my multilingual AI tech support site for Graco Magnum airless sprayers.
-AI persona: Marc. Languages: EN/NL/FR/DE/ES.
-Models covered: A20, A30, A45, A60, A100.
-Revenue: Ko-fi donations (€3 ask) + manual downloads (€4.99-€9.99).
-Email: airlessfix@gmail.com / support@airlessfix.eu (Porkbun forwarding).
-Referral code: AFX10.
-Status: Code complete. Ko-fi and email gate NOT yet deployed.
-
-TODAY I need: [FILL THIS IN]</div>
-      <button class="copy-btn" onclick="copyPrompt('af-prompt', this)">COPY PROMPT</button>
-    </div>
-
-    <div class="prompt-block">
-      <div class="prompt-title">DriveAlert — Affiliate Session</div>
-      <div class="prompt-use">Use when working on DriveAlert sites or Amazon affiliate</div>
-      <div class="prompt-text" id="da-prompt">Excalibur session — DriveAlert focus.
-
-DriveAlert (drivealert.eu + drivealert.be) are OOONO CO-DRIVER affiliate sites.
+      <div class="prompt-title">DriveAlert Agent</div>
+      <div class="prompt-use">Affiliate sites, Amazon, OOONO</div>
+      <div class="prompt-text" id="da-prompt">Excalibur — DriveAlert Agent.
+drivealert.eu + drivealert.be — OOONO CO-DRIVER affiliate sites.
 Products: OOONO CO-DRIVER NO2 + P-DISC NO3.
-Amazon affiliate tag: drivealert-21 (Amazon.de only — live).
-Problem: Belgian and French visitors hit German Amazon pages — bad UX, low conversion.
-Needed: Amazon.nl Associates account + Amazon.fr Associates account.
-OOONO direct outreach: support@ooono.com — CEO Christian Walther Øyrabø.
-
-TODAY I need: [FILL THIS IN]</div>
-      <button class="copy-btn" onclick="copyPrompt('da-prompt', this)">COPY PROMPT</button>
+Amazon affiliate tag: drivealert-21 (Amazon.de live).
+GA code: G-NX1B2429ZH on both sites.
+Problem: BE/FR visitors hit German Amazon pages — low conversion.
+Need: Amazon.nl + Amazon.fr Associates accounts.
+OOONO CEO: Christian Walther Øyrabø · support@ooono.com
+TODAY: [FILL THIS IN]</div>
+      <button class="copy-btn" onclick="copyPrompt('da-prompt',this)">COPY PROMPT</button>
     </div>
 
     <div class="prompt-block">
-      <div class="prompt-title">Sangambi — JV Session</div>
-      <div class="prompt-use">Use when working on Sangambi gold mine JV</div>
-      <div class="prompt-text" id="sg-prompt">Excalibur session — Sangambi Gold JV focus.
+      <div class="prompt-title">AirlessFix Agent</div>
+      <div class="prompt-use">Marc AI persona, Ko-fi, technical deployment</div>
+      <div class="prompt-text" id="af-prompt">Excalibur — AirlessFix Agent.
+airlessfix.eu — multilingual AI tech support for Graco Magnum sprayers.
+AI persona: Marc. Languages: EN/NL/FR/DE/ES. Models: A20/A30/A45/A60/A100.
+Revenue: Ko-fi donations (€3) + manual downloads (€4.99–€9.99).
+Email: airlessfix@gmail.com / support@airlessfix.eu (Porkbun forwarding — free).
+Referral code: AFX10.
+Status: Code complete. Ko-fi + email gate NOT yet deployed.
+Brand: "Marc works out of store hours" / "Broken sprayer? Marc works nights."
+TODAY: [FILL THIS IN]</div>
+      <button class="copy-btn" onclick="copyPrompt('af-prompt',this)">COPY PROMPT</button>
+    </div>
 
-Sangambi gold mine joint venture.
-My role: Kristof Cordier + Jon (Nuedge LLC) = Africa ground ops and deal sourcing.
-Partners: Ryan + Frank (AMLM) = capital and NASDAQ vehicle (pursuing S-1 filing).
-Mine owner: Jeremiah.
-Technical verification: NI 43-101 report complete.
-Additional opportunity: Copper in Namibia.
-Strategic framing: This is Phase 2 of Excalibur Infinity Bank — gold supply chain.
-Status: Ryan publicly reposted Sangambi on LinkedIn. Investor proposal expected. Do not chase.
+    <div class="prompt-block">
+      <div class="prompt-title">Czech English Engine Agent</div>
+      <div class="prompt-use">LITE lead gen, Zuzanna, education campaign</div>
+      <div class="prompt-text" id="lite-prompt">Excalibur — Czech English Engine Agent.
+Independent lead-gen funnel for English learners in Czech cities.
+Target: Feed students into LITE schools (lite.cz) — 13 locations across Czech Republic.
+LITE uses LRH Study Technology. Applied Scholastics. 50,000+ graduates. 90% job placement.
+My angle: External. No approvals needed. Own the pipe. Offer leads when proven.
+Zuzanna: 20-year friend. Runs LITE with two partners. Currently low enrollment.
+Budget: Zero until funded by other projects.
+Connection to mission: LITE = Applied Scholastics = Education humanitarian campaign.
+TODAY: [FILL THIS IN]</div>
+      <button class="copy-btn" onclick="copyPrompt('lite-prompt',this)">COPY PROMPT</button>
+    </div>
 
-TODAY I need: [FILL THIS IN]</div>
-      <button class="copy-btn" onclick="copyPrompt('sg-prompt', this)">COPY PROMPT</button>
+    <div class="prompt-block">
+      <div class="prompt-title">Sangambi Gold JV Agent</div>
+      <div class="prompt-use">Gold mine JV, AMLM, bank foundation</div>
+      <div class="prompt-text" id="sg-prompt">Excalibur — Sangambi Gold JV Agent.
+Gold mine JV — Phase 2 of Excalibur Infinity Bank gold supply chain.
+My role: Kristof Cordier + Jon (Nuedge LLC) = Africa ground ops + deal sourcing.
+Partners: Ryan + Frank (AMLM) = capital + NASDAQ vehicle (pursuing S-1 filing).
+Mine owner: Jeremiah. Technical verification: NI 43-101 complete.
+Additional: Copper opportunity in Namibia.
+Strategic: Gold from Sangambi backs the Excalibur bank deposits.
+Status: Ryan reposted on LinkedIn — green signal. Waiting for investor proposal. Do NOT chase.
+TODAY: [FILL THIS IN]</div>
+      <button class="copy-btn" onclick="copyPrompt('sg-prompt',this)">COPY PROMPT</button>
     </div>
 
   </div>
 </div>
 
-<!-- ===== WEEKLY PAGE ===== -->
-<div class="page" id="page-weekly">
-  <div class="sec-title" style="padding-top:40px;">Admin Scale — This Week</div>
+<!-- WEEKLY -->
+<div class="page" id="page-weekly" style="display:none;">
+  <div class="sec" style="padding-top:32px;">Admin Scale — This Week</div>
   <div class="week-grid">
-    <div class="day-block">
-      <div class="day-name">Monday</div>
-      <div class="day-task"><strong>AirlessFix</strong> — Ko-fi live. Email gate on. Push.</div>
-      <div class="day-task"><strong>Maison Cordier</strong> — Get French artist details.</div>
+    <div class="day-block"><div class="day-name">Monday</div><div class="day-task"><strong>AirlessFix</strong> — Ko-fi live. Email gate on. Push.</div><div class="day-task"><strong>Maison Cordier</strong> — Get French artist details.</div></div>
+    <div class="day-block"><div class="day-name">Tuesday</div><div class="day-task"><strong>DriveAlert</strong> — Apply Amazon.nl Associates.</div><div class="day-task"><strong>Maison Cordier</strong> — Post 1 Instagram.</div></div>
+    <div class="day-block"><div class="day-name">Wednesday</div><div class="day-task"><strong>DriveAlert</strong> — Apply Amazon.fr Associates.</div><div class="day-task"><strong>Maison Cordier</strong> — Post 2 Instagram.</div></div>
+    <div class="day-block"><div class="day-name">Thursday</div><div class="day-task"><strong>AirlessFix</strong> — Audit live site. Test Marc.</div><div class="day-task"><strong>Maison Cordier</strong> — Post 3. French artist teaser.</div></div>
+    <div class="day-block"><div class="day-name">Friday</div><div class="day-task"><strong>Review</strong> — What moved? What blocked?</div><div class="day-task"><strong>Sangambi</strong> — Any news from Ryan / Frank?</div></div>
+    <div class="day-block"><div class="day-name">Weekend</div><div class="day-task"><strong>Article 10</strong> — Note patterns for AirlessFix.</div><div class="day-task"><strong>Rest</strong> — Armies need sleep.</div></div>
+  </div>
+</div>
+
+<!-- CLAUDE AGENT PAGE -->
+<div class="page" id="page-agent" style="display:none;">
+  <div class="sec" style="padding-top:32px;">⚡ Excalibur Agent — Direct Claude Interface</div>
+
+  <div class="claude-panel">
+    <div class="claude-header">
+      <div class="claude-title">EXCALIBUR AGENT</div>
+      <div class="claude-status"><span class="live-dot"></span>CONNECTED</div>
     </div>
-    <div class="day-block">
-      <div class="day-name">Tuesday</div>
-      <div class="day-task"><strong>DriveAlert</strong> — Apply Amazon.nl Associates.</div>
-      <div class="day-task"><strong>Maison Cordier</strong> — Post 1 Instagram. Kirsteen story.</div>
+    <div class="claude-body">
+      <div class="claude-messages" id="claude-messages">
+        <div class="msg-claude">Excalibur Agent online. I have full context of all your projects, the mission, and your CFO rules. Ask me anything about any project — or tell me what you want to work on today and I'll direct you to the right action.</div>
+      </div>
+      <div class="claude-input-row">
+        <input type="text" class="claude-input" id="claude-input" placeholder="Ask anything about any project..." onkeypress="if(event.key==='Enter')sendToAgent()">
+        <button class="claude-send" onclick="sendToAgent()">SEND ▶</button>
+      </div>
+      <div class="claude-context" id="agent-context">Context: All 5 projects loaded · CFO rules active · Mission: Excalibur Infinity Bank</div>
     </div>
-    <div class="day-block">
-      <div class="day-name">Wednesday</div>
-      <div class="day-task"><strong>DriveAlert</strong> — Apply Amazon.fr Associates.</div>
-      <div class="day-task"><strong>Maison Cordier</strong> — Post 2 Instagram.</div>
-    </div>
-    <div class="day-block">
-      <div class="day-name">Thursday</div>
-      <div class="day-task"><strong>AirlessFix</strong> — Audit live site. Test Marc.</div>
-      <div class="day-task"><strong>Maison Cordier</strong> — Post 3. French artist teaser.</div>
-    </div>
-    <div class="day-block">
-      <div class="day-name">Friday</div>
-      <div class="day-task"><strong>Review</strong> — What moved? What blocked?</div>
-      <div class="day-task"><strong>Sangambi</strong> — Any news from Ryan / Frank?</div>
-    </div>
-    <div class="day-block">
-      <div class="day-name">Weekend</div>
-      <div class="day-task"><strong>Article 10</strong> — Already doing this. Note patterns for AirlessFix.</div>
-      <div class="day-task"><strong>Rest</strong> — Armies need sleep.</div>
-    </div>
+  </div>
+</div>
+
+<!-- FRENCH ARTIST MODAL -->
+<div class="modal-overlay" id="french-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('french-modal').classList.remove('open')">✕</button>
+    <h3>French Artist Details</h3>
+    <label class="edit-label">Name</label>
+    <input type="text" class="edit-field" id="fr-name-m" placeholder="Artist full name">
+    <label class="edit-label">Style / Medium</label>
+    <input type="text" class="edit-field" id="fr-style-m" placeholder="e.g. French impressionist, oil on canvas">
+    <label class="edit-label">Price per painting (€)</label>
+    <input type="number" class="edit-field" id="fr-price-m" placeholder="0">
+    <label class="edit-label">Email</label>
+    <input type="text" class="edit-field" id="fr-email-m" placeholder="Email address">
+    <label class="edit-label">Instagram</label>
+    <input type="text" class="edit-field" id="fr-ig-m" placeholder="@handle">
+    <label class="edit-label">Notes</label>
+    <textarea class="edit-field" id="fr-notes-m" rows="2" placeholder="Any notes from her email reply"></textarea>
+    <button class="save-btn" onclick="saveFrenchArtistModal()">SAVE ARTIST</button>
   </div>
 </div>
 
 <footer>
-  <div class="foot-left">EXCALIBUR v4.0 · CAESEYSOLUTIONS LLC · PRIVATE · ZERO COST</div>
-  <div class="foot-right">By helping others, money flows. The sword sharpens itself.</div>
+  <div class="foot-left">EXCALIBUR v6.0 · CAESEYSOLUTIONS LLC · PRIVATE</div>
+  <div class="foot-right">By helping others, money flows. The sword sharpens itself. The planet gets better.</div>
 </footer>
 
-</div><!-- end #app -->
+</div>
 
 <script>
-// ===== PASSWORD =====
-const PASSWORD = 'excaliber2026';
+const PASSWORD = 'exec2026';
 
+// LOCK
 function checkPassword() {
   const input = document.getElementById('pwd-input').value;
   if (input === PASSWORD) {
     document.getElementById('lock-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     loadIncome();
+    loadFocus();
+    loadFrenchArtist();
   } else {
     document.getElementById('lock-error').style.display = 'block';
     document.getElementById('pwd-input').value = '';
     document.getElementById('pwd-input').focus();
   }
 }
+document.getElementById('pwd-input').addEventListener('keypress', e => { if(e.key==='Enter') checkPassword(); });
 
-document.getElementById('pwd-input').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') checkPassword();
-});
-
-// ===== CLOCK =====
+// CLOCK
 function updateTime() {
   const now = new Date();
-  document.getElementById('live-date').textContent = now.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
+  document.getElementById('live-date').textContent = now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   document.getElementById('live-time').textContent = now.toLocaleTimeString('en-GB');
 }
-updateTime();
-setInterval(updateTime, 1000);
+updateTime(); setInterval(updateTime, 1000);
 
-// ===== NAVIGATION =====
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+// NAVIGATION
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display='none'; });
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('proj-detail').classList.remove('active');
   document.getElementById('proj-detail').style.display = 'none';
+  document.getElementById('proj-detail').classList.remove('active');
   const page = document.getElementById('page-' + name);
-  if (page) {
-    page.classList.add('active');
-    page.style.display = 'block';
-  }
-  event.target.classList.add('active');
+  if (page) { page.classList.add('active'); page.style.display='block'; }
+  if (btn) btn.classList.add('active');
+  if (name === 'income') loadIncome();
+  window.scrollTo(0,0);
 }
 
-// ===== PROJECTS =====
+// DAILY FOCUS
+function saveFocus() {
+  const val = document.getElementById('focus-input').value;
+  localStorage.setItem('daily_focus', val);
+  const btn = document.querySelector('.focus-save');
+  btn.textContent = '✓ SAVED';
+  setTimeout(() => { btn.textContent = 'SAVE'; }, 1500);
+}
+function loadFocus() {
+  const saved = localStorage.getItem('daily_focus');
+  if (saved) document.getElementById('focus-input').value = saved;
+}
+
+// PROJECTS
 const projectData = {
-  maison: {
-    name: 'Maison Cordier',
-    status: 'Live',
-    next: 'Write 7 Instagram posts with hashtags. Get French artist name + 3 images. Post daily.',
-    blockers: 'French artist details not captured\nNo Instagram content plan\nZero sales — first sale is the milestone',
-    notes: '',
-    briefKey: 'mc-prompt'
-  },
-  drivealert: {
-    name: 'DriveAlert',
-    status: 'Building',
-    next: 'Apply for Amazon.nl Associates account. Apply for Amazon.fr Associates account.',
-    blockers: 'Amazon.nl Associates not set up\nAmazon.fr Associates not set up\nOOONO direct outreach — no response',
-    notes: '',
-    briefKey: 'da-prompt'
-  },
-  airlessfix: {
-    name: 'AirlessFix',
-    status: 'Building',
-    next: 'Deploy Ko-fi button. Activate email gate. Set Porkbun forwarding. Push live.',
-    blockers: 'Ko-fi not deployed\nEmail gate not activated\nGoogle Sheets logging not connected',
-    notes: '',
-    briefKey: 'af-prompt'
-  },
-  lite: {
-    name: 'Czech English Engine',
-    status: 'Concept',
-    next: 'Fund first via Maison Cordier or AirlessFix. Then build landing page on GitHub Pages.',
-    blockers: 'No budget yet\nZuzanna not formally approached',
-    notes: '',
-    briefKey: 'daily-brief'
-  },
-  sangambi: {
-    name: 'Sangambi Gold JV',
-    status: 'Waiting',
-    next: 'Hold. Wait for investor proposal from Ryan + Frank. Do not chase.',
-    blockers: 'Investor proposal not received\nNamibia copper details pending',
-    notes: '',
-    briefKey: 'sg-prompt'
-  }
+  maison: { name:'Maison Cordier', status:'Live', next:'Write 7 Instagram posts with hashtags. Get French artist name + images. Post daily.', blockers:'French artist details not captured\nNo Instagram content plan\nZero sales — first sale is the milestone', notes:'', briefKey:'mc-prompt' },
+  drivealert: { name:'DriveAlert', status:'Building', next:'Apply Amazon.nl Associates. Apply Amazon.fr Associates.', blockers:'Amazon.nl Associates not set up\nAmazon.fr Associates not set up\nOOONO outreach — no response', notes:'', briefKey:'da-prompt' },
+  airlessfix: { name:'AirlessFix', status:'Building', next:'Deploy Ko-fi. Activate email gate. Set Porkbun forwarding. Push live.', blockers:'Ko-fi not deployed\nEmail gate not activated\nGA code — add when live', notes:'', briefKey:'af-prompt' },
+  lite: { name:'Czech English Engine', status:'Concept', next:'Fund first. Then build GitHub Pages landing page.', blockers:'No budget yet\nZuzanna not formally approached', notes:'', briefKey:'lite-prompt' },
+  sangambi: { name:'Sangambi Gold JV', status:'Waiting', next:'Hold. Wait for proposal from Ryan + Frank. Do not chase.', blockers:'Investor proposal not received\nNamibia copper details pending', notes:'', briefKey:'sg-prompt' }
 };
 
 let currentProject = null;
 
 function openProject(id) {
   currentProject = id;
-  const data = JSON.parse(localStorage.getItem('proj_' + id)) || projectData[id];
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const saved = JSON.parse(localStorage.getItem('proj_'+id)) || {};
+  const data = Object.assign({}, projectData[id], saved);
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display='none'; });
   const detail = document.getElementById('proj-detail');
   detail.style.display = 'block';
   detail.classList.add('active');
-  document.getElementById('d-status').value = data.status || projectData[id].status;
-  document.getElementById('d-next').value = data.next || projectData[id].next;
-  document.getElementById('d-blockers').value = data.blockers || projectData[id].blockers;
+  document.getElementById('d-status').value = data.status;
+  document.getElementById('d-next').value = data.next;
+  document.getElementById('d-blockers').value = data.blockers;
   document.getElementById('d-notes').value = data.notes || '';
-  const briefText = document.getElementById(projectData[id].briefKey);
-  document.getElementById('d-brief').textContent = briefText ? briefText.textContent : 'Open the Prompts page to find the brief for this project.';
-  window.scrollTo(0, 0);
+  const briefEl = document.getElementById(projectData[id].briefKey);
+  document.getElementById('d-brief').textContent = briefEl ? briefEl.textContent : 'Open Prompts page for this project brief.';
+  window.scrollTo(0,0);
 }
 
 function closeProject() {
-  document.getElementById('proj-detail').classList.remove('active');
   document.getElementById('proj-detail').style.display = 'none';
+  document.getElementById('proj-detail').classList.remove('active');
   document.getElementById('page-dashboard').classList.add('active');
+  document.getElementById('page-dashboard').style.display = 'block';
+  window.scrollTo(0,0);
 }
 
 function saveProject() {
@@ -1649,13 +1036,51 @@ function saveProject() {
     blockers: document.getElementById('d-blockers').value,
     notes: document.getElementById('d-notes').value
   };
-  localStorage.setItem('proj_' + currentProject, JSON.stringify(data));
+  localStorage.setItem('proj_'+currentProject, JSON.stringify(data));
   const ss = document.getElementById('save-status');
   ss.style.display = 'inline';
-  setTimeout(() => { ss.style.display = 'none'; }, 2000);
+  setTimeout(() => { ss.style.display='none'; }, 2000);
 }
 
-// ===== INCOME =====
+// FRENCH ARTIST
+function openFrenchArtist() {
+  document.getElementById('french-modal').classList.add('open');
+}
+
+function saveFrenchArtistModal() {
+  const data = {
+    name: document.getElementById('fr-name-m').value,
+    style: document.getElementById('fr-style-m').value,
+    price: document.getElementById('fr-price-m').value,
+    email: document.getElementById('fr-email-m').value,
+    ig: document.getElementById('fr-ig-m').value,
+    notes: document.getElementById('fr-notes-m').value
+  };
+  localStorage.setItem('french_artist', JSON.stringify(data));
+  document.getElementById('french-modal').classList.remove('open');
+  loadFrenchArtist();
+}
+
+function loadFrenchArtist() {
+  const saved = JSON.parse(localStorage.getItem('french_artist'));
+  if (saved && saved.name) {
+    const card = document.querySelector('.artist-card.empty');
+    if (card) {
+      card.innerHTML = `
+        <div class="artist-name">${saved.name}</div>
+        <div class="artist-tag">🇫🇷 French Artist — Active</div>
+        <div class="artist-detail"><strong>Style:</strong> ${saved.style}</div>
+        <div class="artist-detail"><strong>Price:</strong> €${saved.price} per painting</div>
+        <div class="artist-detail"><strong>Email:</strong> ${saved.email}</div>
+        <div class="artist-detail"><strong>Instagram:</strong> ${saved.ig}</div>
+        <div class="artist-detail"><strong>Notes:</strong> ${saved.notes}</div>
+        <button class="fill-btn" onclick="openFrenchArtist()">EDIT DETAILS</button>
+      `;
+    }
+  }
+}
+
+// INCOME
 function loadIncome() {
   const entries = JSON.parse(localStorage.getItem('income_entries')) || [];
   renderIncome(entries);
@@ -1667,10 +1092,7 @@ function logIncome() {
   const desc = document.getElementById('inc-desc').value;
   if (!amount || amount <= 0) { alert('Enter a valid amount'); return; }
   const entries = JSON.parse(localStorage.getItem('income_entries')) || [];
-  entries.unshift({
-    date: new Date().toLocaleDateString('en-GB'),
-    project, amount, desc
-  });
+  entries.unshift({ date: new Date().toLocaleDateString('en-GB'), project, amount, desc });
   localStorage.setItem('income_entries', JSON.stringify(entries));
   document.getElementById('inc-amount').value = '';
   document.getElementById('inc-desc').value = '';
@@ -1679,47 +1101,103 @@ function logIncome() {
 
 function renderIncome(entries) {
   const tbody = document.getElementById('income-tbody');
-  if (entries.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--mid); text-align:center; padding:24px;">No income logged yet. First euro incoming.</td></tr>';
+  if (!entries.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--mid);text-align:center;padding:24px;">No income logged yet. First euro incoming.</td></tr>';
     return;
   }
-  const total = entries.reduce((s, e) => s + e.amount, 0);
+  const total = entries.reduce((s,e) => s+e.amount, 0);
   const now = new Date();
   const thisMonth = entries.filter(e => {
-    const parts = e.date.split('/');
-    return parseInt(parts[1]) === now.getMonth() + 1 && parseInt(parts[2]) === now.getFullYear();
-  }).reduce((s, e) => s + e.amount, 0);
-  document.getElementById('total-income').textContent = '€' + total.toFixed(2);
-  document.getElementById('this-month').textContent = '€' + thisMonth.toFixed(2);
-  document.getElementById('target-gap').textContent = '€' + Math.max(0, 200 - total).toFixed(2);
+    const p = e.date.split('/');
+    return parseInt(p[1]) === now.getMonth()+1 && parseInt(p[2]) === now.getFullYear();
+  }).reduce((s,e) => s+e.amount, 0);
+  document.getElementById('total-income').textContent = '€'+total.toFixed(2);
+  document.getElementById('this-month').textContent = '€'+thisMonth.toFixed(2);
+  document.getElementById('target-gap').textContent = '€'+Math.max(0,200-total).toFixed(2);
   document.getElementById('entry-count').textContent = entries.length;
-  tbody.innerHTML = entries.map(e => `
-    <tr>
-      <td>${e.date}</td>
-      <td class="project">${e.project}</td>
-      <td>${e.desc}</td>
-      <td class="amount">€${e.amount.toFixed(2)}</td>
-    </tr>
-  `).join('');
+  tbody.innerHTML = entries.map(e => `<tr><td>${e.date}</td><td class="project">${e.project}</td><td>${e.desc}</td><td class="amount">€${e.amount.toFixed(2)}</td></tr>`).join('');
 }
 
-// ===== COPY PROMPTS =====
+// COPY PROMPTS
 function copyPrompt(id, btn) {
   const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
     btn.textContent = '✓ COPIED';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'COPY PROMPT'; btn.classList.remove('copied'); }, 2000);
+    setTimeout(() => { btn.textContent='COPY PROMPT'; btn.classList.remove('copied'); }, 2000);
   });
 }
-
 function copyBrief() {
   const text = document.getElementById('d-brief').textContent;
   navigator.clipboard.writeText(text).then(() => {
-    alert('Brief copied — paste it into Claude');
+    const btn = event.target;
+    btn.textContent = '✓ COPIED';
+    setTimeout(() => { btn.textContent='COPY BRIEF'; }, 2000);
   });
 }
-</script>
 
+// CLAUDE AGENT
+const SYSTEM_CONTEXT = `You are the Excalibur Agent for Kristof Cordier. CaeseySolutions LLC (Wyoming).
+
+MISSION: Build Excalibur Infinity Bank to fund humanitarian campaigns permanently.
+
+PROJECTS:
+1. Maison Cordier (maisoncordier.art) — European art curation. Kirsteen Lyons-Benson Scottish painter €1,095/painting, 15% commission = €164/sale. French artist pending. Instagram @maisoncordier started March 2026.
+2. DriveAlert (drivealert.eu/.be) — OOONO affiliate. Amazon.de tag drivealert-21 live. Need Amazon.nl + .fr accounts. OOONO CEO Christian Walther Øyrabø.
+3. AirlessFix (airlessfix.eu) — Graco Magnum AI support. Marc persona. 5 languages. Ko-fi + email gate not deployed yet.
+4. Czech English Engine — Independent lead-gen for LITE English schools. Feeds Applied Scholastics education campaign.
+5. Sangambi Gold JV — Kristof + Jon (Nuedge) = Africa ground ops. Ryan + Frank (AMLM) = capital + NASDAQ. Phase 2 of bank. Waiting on investor proposal.
+
+CFO RULES: Nothing spends before it earns. Free tools first. One step at a time. Test before next step.
+
+Be direct, punchy, no waffle. Short answers. Always point to the next concrete action.`;
+
+async function sendToAgent() {
+  const input = document.getElementById('claude-input');
+  const messages = document.getElementById('claude-messages');
+  const userText = input.value.trim();
+  if (!userText) return;
+
+  // Show user message
+  messages.innerHTML += `<div class="msg-user">${userText}</div>`;
+  input.value = '';
+
+  // Show thinking
+  const thinkingId = 'thinking-' + Date.now();
+  messages.innerHTML += `<div class="msg-thinking" id="${thinkingId}">▋ thinking...</div>`;
+  messages.scrollTop = messages.scrollHeight;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_CONTEXT,
+        messages: [{ role: 'user', content: userText }]
+      })
+    });
+
+    const data = await response.json();
+    const reply = data.content && data.content[0] ? data.content[0].text : 'No response received.';
+
+    // Remove thinking, add reply
+    document.getElementById(thinkingId).remove();
+    messages.innerHTML += `<div class="msg-claude">${reply}</div>`;
+
+  } catch (err) {
+    document.getElementById(thinkingId).remove();
+    messages.innerHTML += `<div class="msg-claude">Connection error. Use the Prompts page to copy a brief and open Claude directly at claude.ai — that always works. <a href="https://claude.ai" target="_blank" style="color:var(--cyan);">Open Claude ↗</a></div>`;
+  }
+
+  messages.scrollTop = messages.scrollHeight;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const ci = document.getElementById('claude-input');
+  if (ci) ci.addEventListener('keypress', e => { if(e.key==='Enter') sendToAgent(); });
+});
+</script>
 </body>
 </html>
